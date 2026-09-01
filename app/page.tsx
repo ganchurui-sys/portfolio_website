@@ -4,162 +4,81 @@ import { useEffect, useRef, useState } from "react";
 
 type CoverState = "visible" | "leaving" | "hidden";
 
-type Ripple = {
-  x: number;
-  y: number;
-  age: number;
-  duration: number;
-  intensity: number;
-};
-
-function WaterRippleBackground() {
+function LiquidRefractionBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const context = canvas.getContext("2d");
-    if (!context) return;
-
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    let animationFrame = 0;
-    let lastFrame = performance.now();
-    let lastAmbient = lastFrame;
-    let lastPointerTime = 0;
-    let lastPointerX = -100;
-    let lastPointerY = -100;
-    const ripples: Ripple[] = [];
+    const titleImage = new Image();
+    let disposed = false;
+    let surface: import("threejs-components/build/backgrounds/liquid1.min.js").LiquidSurface | null = null;
 
-    const addRipple = (
-      x: number,
-      y: number,
-      intensity: number,
-      delay = 0,
-    ) => {
-      ripples.push({
-        x,
-        y,
-        age: -delay,
-        duration: 1350 + intensity * 450,
-        intensity,
-      });
-
-      if (ripples.length > 14) ripples.shift();
-    };
-
-    const resizeCanvas = () => {
+    const startSurface = async () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = Math.round(width * ratio);
-      canvas.height = Math.round(height * ratio);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      const mobile = width <= 760;
+      const frameWidth = Math.min(width * (mobile ? 0.96 : 0.94), 1600);
+      const frameHeight = frameWidth / 2;
+      const stageTop = height * (mobile ? 0.18 : 0.14);
+      const stageHeight = height * (mobile ? 0.3 : 0.34);
+      const frameTop = stageTop + (stageHeight - frameHeight) / 2;
+      const source = document.createElement("canvas");
+      const context = source.getContext("2d");
+
+      if (!context) return;
+
+      source.width = Math.round(width * ratio);
+      source.height = Math.round(height * ratio);
+      context.scale(ratio, ratio);
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, width, height);
+      context.drawImage(
+        titleImage,
+        (width - frameWidth) / 2,
+        frameTop,
+        frameWidth,
+        frameHeight,
+      );
+
+      // ISC-licensed refraction engine used by liquid-refraction-lab.
+      const { default: createLiquidSurface } = await import(
+        "threejs-components/build/backgrounds/liquid1.min.js"
+      );
+      if (disposed) return;
+
+      surface = createLiquidSurface(canvas);
+      surface.liquidPlane.material.metalness = 0.05;
+      surface.liquidPlane.material.roughness = 0.78;
+      surface.liquidPlane.uniforms.displacementScale.value = reducedMotion ? 0 : 0.85;
+      surface.liquidPlane.attenuation = 0.978;
+      surface.setRain(false);
+      await surface.loadImage(source.toDataURL("image/png"));
+
+      if (!disposed) canvas.dataset.ready = "true";
     };
 
-    const drawWave = (ripple: Ripple, progress: number, waveScale: number) => {
-      const eased = 1 - Math.pow(1 - progress, 2);
-      const radius = (12 + eased * (72 + ripple.intensity * 68)) * waveScale;
-      const band = 14 + ripple.intensity * 13;
-      const outerRadius = radius + band;
-      const visibility = Math.sin(progress * Math.PI);
-      const alpha = visibility * (0.12 + ripple.intensity * 0.08);
-      const bandStart = Math.max(0, (radius - band) / outerRadius);
-      const shadowPeak = Math.max(bandStart + 0.01, (radius - band * 0.28) / outerRadius);
-      const lightPeak = Math.max(shadowPeak + 0.01, (radius + band * 0.22) / outerRadius);
-      const softEdge = Math.max(lightPeak + 0.01, (radius + band * 0.68) / outerRadius);
-
-      context.save();
-      context.translate(ripple.x, ripple.y);
-      context.scale(1, 0.78);
-
-      const gradient = context.createRadialGradient(0, 0, 0, 0, 0, outerRadius);
-      gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
-      gradient.addColorStop(bandStart, "rgba(255, 255, 255, 0)");
-      gradient.addColorStop(shadowPeak, `rgba(32, 32, 32, ${alpha * 0.34})`);
-      gradient.addColorStop(lightPeak, `rgba(255, 255, 255, ${alpha * 0.9})`);
-      gradient.addColorStop(softEdge, `rgba(50, 50, 50, ${alpha * 0.16})`);
-      gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
-
-      context.filter = `blur(${1.8 + ripple.intensity * 1.8}px)`;
-      context.fillStyle = gradient;
-      context.fillRect(-outerRadius, -outerRadius, outerRadius * 2, outerRadius * 2);
-      context.restore();
-    };
-
-    const animate = (time: number) => {
-      const delta = Math.min(time - lastFrame, 40);
-      lastFrame = time;
-      context.clearRect(0, 0, width, height);
-
-      if (time - lastAmbient > 3600) {
-        addRipple(
-          width * (0.12 + Math.random() * 0.76),
-          height * (0.18 + Math.random() * 0.64),
-          0.2,
-        );
-        lastAmbient = time;
-      }
-
-      for (let index = ripples.length - 1; index >= 0; index -= 1) {
-        const ripple = ripples[index];
-        ripple.age += delta;
-        if (ripple.age < 0) continue;
-
-        const progress = ripple.age / ripple.duration;
-        if (progress >= 1) {
-          ripples.splice(index, 1);
-          continue;
-        }
-
-        drawWave(ripple, progress, 1);
-        drawWave(ripple, Math.min(1, progress + 0.1), 0.7);
-      }
-
-      animationFrame = window.requestAnimationFrame(animate);
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      const now = performance.now();
-      const distance = Math.hypot(event.clientX - lastPointerX, event.clientY - lastPointerY);
-
-      if (now - lastPointerTime > 110 && distance > 36) {
-        addRipple(event.clientX, event.clientY, 0.34);
-        lastPointerTime = now;
-        lastPointerX = event.clientX;
-        lastPointerY = event.clientY;
-      }
-    };
-
-    const handlePointerDown = (event: PointerEvent) => {
-      addRipple(event.clientX, event.clientY, 0.85);
-      addRipple(event.clientX, event.clientY, 0.48, 170);
-    };
-
-    resizeCanvas();
-
-    if (!reducedMotion) {
-      addRipple(width * 0.24, height * 0.42, 0.24);
-      addRipple(width * 0.72, height * 0.3, 0.2, 650);
-      window.addEventListener("resize", resizeCanvas);
-      window.addEventListener("pointermove", handlePointerMove, { passive: true });
-      window.addEventListener("pointerdown", handlePointerDown, { passive: true });
-      animationFrame = window.requestAnimationFrame(animate);
-    }
+    titleImage.addEventListener("load", startSurface, { once: true });
+    titleImage.src = "/portfolio-title-transparent.png";
 
     return () => {
-      window.cancelAnimationFrame(animationFrame);
-      window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerdown", handlePointerDown);
+      disposed = true;
+      titleImage.removeEventListener("load", startSurface);
+      surface?.dispose();
     };
   }, []);
 
-  return <canvas className="water-ripple-canvas" ref={canvasRef} aria-hidden="true" />;
+  return (
+    <canvas
+      className="water-ripple-canvas"
+      ref={canvasRef}
+      role="img"
+      aria-label="Portfolio"
+    />
+  );
 }
 
 const projects = [
@@ -201,16 +120,7 @@ export default function Home() {
             }
           }}
         >
-          <WaterRippleBackground />
-          <div className="cover-stage">
-            <div className="cover-title-frame">
-              <img
-                className="cover-title-image"
-                src="/portfolio-title-transparent.png"
-                alt="Portfolio"
-              />
-            </div>
-          </div>
+          <LiquidRefractionBackground />
           <button
             className="enter-button"
             type="button"
