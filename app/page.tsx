@@ -1,8 +1,177 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type CoverState = "visible" | "leaving" | "hidden";
+
+type Ripple = {
+  x: number;
+  y: number;
+  age: number;
+  duration: number;
+  intensity: number;
+  phase: number;
+};
+
+function WaterRippleBackground() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let animationFrame = 0;
+    let lastFrame = performance.now();
+    let lastAmbient = lastFrame;
+    let lastPointerTime = 0;
+    let lastPointerX = -100;
+    let lastPointerY = -100;
+    const ripples: Ripple[] = [];
+
+    const addRipple = (
+      x: number,
+      y: number,
+      intensity: number,
+      delay = 0,
+    ) => {
+      ripples.push({
+        x,
+        y,
+        age: -delay,
+        duration: 1900 + intensity * 650,
+        intensity,
+        phase: Math.random() * Math.PI * 2,
+      });
+
+      if (ripples.length > 24) ripples.shift();
+    };
+
+    const resizeCanvas = () => {
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    };
+
+    const drawRing = (ripple: Ripple, progress: number, ringScale: number) => {
+      const eased = 1 - Math.pow(1 - progress, 2);
+      const radius = (12 + eased * (145 + ripple.intensity * 135)) * ringScale;
+      const alpha = Math.sin(progress * Math.PI) * 0.2 * ripple.intensity;
+      const wave = (1 - progress) * 2.6;
+      const segments = 88;
+
+      context.save();
+      context.translate(ripple.x, ripple.y);
+      context.scale(1, 0.62);
+      context.beginPath();
+
+      for (let index = 0; index <= segments; index += 1) {
+        const angle = (index / segments) * Math.PI * 2;
+        const displacement = Math.sin(angle * 6 + ripple.phase + progress * 8) * wave;
+        const pointRadius = radius + displacement;
+        const x = Math.cos(angle) * pointRadius;
+        const y = Math.sin(angle) * pointRadius;
+
+        if (index === 0) context.moveTo(x, y);
+        else context.lineTo(x, y);
+      }
+
+      context.closePath();
+      context.lineWidth = 1.1 + ripple.intensity * 0.45;
+      context.strokeStyle = `rgba(80, 126, 153, ${alpha})`;
+      context.shadowColor = `rgba(76, 121, 150, ${alpha * 0.8})`;
+      context.shadowBlur = 10 + ripple.intensity * 6;
+      context.stroke();
+
+      context.translate(0, -2.2);
+      context.lineWidth = 0.8;
+      context.strokeStyle = `rgba(255, 255, 255, ${alpha * 1.3})`;
+      context.shadowBlur = 0;
+      context.stroke();
+      context.restore();
+    };
+
+    const animate = (time: number) => {
+      const delta = Math.min(time - lastFrame, 40);
+      lastFrame = time;
+      context.clearRect(0, 0, width, height);
+
+      if (time - lastAmbient > 2500) {
+        addRipple(
+          width * (0.12 + Math.random() * 0.76),
+          height * (0.18 + Math.random() * 0.64),
+          0.32,
+        );
+        lastAmbient = time;
+      }
+
+      for (let index = ripples.length - 1; index >= 0; index -= 1) {
+        const ripple = ripples[index];
+        ripple.age += delta;
+        if (ripple.age < 0) continue;
+
+        const progress = ripple.age / ripple.duration;
+        if (progress >= 1) {
+          ripples.splice(index, 1);
+          continue;
+        }
+
+        drawRing(ripple, progress, 1);
+        drawRing(ripple, Math.min(1, progress + 0.08), 0.78);
+      }
+
+      animationFrame = window.requestAnimationFrame(animate);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const now = performance.now();
+      const distance = Math.hypot(event.clientX - lastPointerX, event.clientY - lastPointerY);
+
+      if (now - lastPointerTime > 75 && distance > 24) {
+        addRipple(event.clientX, event.clientY, 0.48);
+        lastPointerTime = now;
+        lastPointerX = event.clientX;
+        lastPointerY = event.clientY;
+      }
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      addRipple(event.clientX, event.clientY, 1.15);
+      addRipple(event.clientX, event.clientY, 0.9, 150);
+      addRipple(event.clientX, event.clientY, 0.7, 300);
+    };
+
+    resizeCanvas();
+
+    if (!reducedMotion) {
+      addRipple(width * 0.24, height * 0.42, 0.38);
+      addRipple(width * 0.72, height * 0.3, 0.3, 500);
+      window.addEventListener("resize", resizeCanvas);
+      window.addEventListener("pointermove", handlePointerMove, { passive: true });
+      window.addEventListener("pointerdown", handlePointerDown, { passive: true });
+      animationFrame = window.requestAnimationFrame(animate);
+    }
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, []);
+
+  return <canvas className="water-ripple-canvas" ref={canvasRef} aria-hidden="true" />;
+}
 
 const projects = [
   { number: "01", title: "Form / Function", type: "Identity", year: "2026" },
@@ -43,6 +212,7 @@ export default function Home() {
             }
           }}
         >
+          <WaterRippleBackground />
           <div className="cover-stage">
             <div className="cover-title-frame">
               <img className="cover-title-image" src="/portfolio-title.png" alt="Portfolio" />
