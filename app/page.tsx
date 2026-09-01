@@ -10,7 +10,6 @@ type Ripple = {
   age: number;
   duration: number;
   intensity: number;
-  phase: number;
 };
 
 function WaterRippleBackground() {
@@ -46,7 +45,6 @@ function WaterRippleBackground() {
         age: -delay,
         duration: 1900 + intensity * 650,
         intensity,
-        phase: Math.random() * Math.PI * 2,
       });
 
       if (ripples.length > 24) ripples.shift();
@@ -63,41 +61,33 @@ function WaterRippleBackground() {
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
     };
 
-    const drawRing = (ripple: Ripple, progress: number, ringScale: number) => {
+    const drawWave = (ripple: Ripple, progress: number, waveScale: number) => {
       const eased = 1 - Math.pow(1 - progress, 2);
-      const radius = (12 + eased * (145 + ripple.intensity * 135)) * ringScale;
-      const alpha = Math.sin(progress * Math.PI) * 0.2 * ripple.intensity;
-      const wave = (1 - progress) * 2.6;
-      const segments = 88;
+      const radius = (22 + eased * (170 + ripple.intensity * 165)) * waveScale;
+      const band = 30 + ripple.intensity * 28;
+      const outerRadius = radius + band;
+      const visibility = Math.sin(progress * Math.PI);
+      const alpha = visibility * (0.24 + ripple.intensity * 0.16);
+      const bandStart = Math.max(0, (radius - band) / outerRadius);
+      const shadowPeak = Math.max(bandStart + 0.01, (radius - band * 0.28) / outerRadius);
+      const lightPeak = Math.max(shadowPeak + 0.01, (radius + band * 0.22) / outerRadius);
+      const softEdge = Math.max(lightPeak + 0.01, (radius + band * 0.68) / outerRadius);
 
       context.save();
       context.translate(ripple.x, ripple.y);
-      context.scale(1, 0.62);
-      context.beginPath();
+      context.scale(1, 0.7);
 
-      for (let index = 0; index <= segments; index += 1) {
-        const angle = (index / segments) * Math.PI * 2;
-        const displacement = Math.sin(angle * 6 + ripple.phase + progress * 8) * wave;
-        const pointRadius = radius + displacement;
-        const x = Math.cos(angle) * pointRadius;
-        const y = Math.sin(angle) * pointRadius;
+      const gradient = context.createRadialGradient(0, 0, 0, 0, 0, outerRadius);
+      gradient.addColorStop(0, "rgba(205, 229, 238, 0)");
+      gradient.addColorStop(bandStart, "rgba(205, 229, 238, 0)");
+      gradient.addColorStop(shadowPeak, `rgba(92, 144, 168, ${alpha * 0.72})`);
+      gradient.addColorStop(lightPeak, `rgba(255, 255, 255, ${alpha})`);
+      gradient.addColorStop(softEdge, `rgba(132, 178, 198, ${alpha * 0.34})`);
+      gradient.addColorStop(1, "rgba(205, 229, 238, 0)");
 
-        if (index === 0) context.moveTo(x, y);
-        else context.lineTo(x, y);
-      }
-
-      context.closePath();
-      context.lineWidth = 1.1 + ripple.intensity * 0.45;
-      context.strokeStyle = `rgba(80, 126, 153, ${alpha})`;
-      context.shadowColor = `rgba(76, 121, 150, ${alpha * 0.8})`;
-      context.shadowBlur = 10 + ripple.intensity * 6;
-      context.stroke();
-
-      context.translate(0, -2.2);
-      context.lineWidth = 0.8;
-      context.strokeStyle = `rgba(255, 255, 255, ${alpha * 1.3})`;
-      context.shadowBlur = 0;
-      context.stroke();
+      context.filter = `blur(${2.5 + ripple.intensity * 2.5}px)`;
+      context.fillStyle = gradient;
+      context.fillRect(-outerRadius, -outerRadius, outerRadius * 2, outerRadius * 2);
       context.restore();
     };
 
@@ -126,8 +116,8 @@ function WaterRippleBackground() {
           continue;
         }
 
-        drawRing(ripple, progress, 1);
-        drawRing(ripple, Math.min(1, progress + 0.08), 0.78);
+        drawWave(ripple, progress, 1);
+        drawWave(ripple, Math.min(1, progress + 0.12), 0.68);
       }
 
       animationFrame = window.requestAnimationFrame(animate);
@@ -138,7 +128,7 @@ function WaterRippleBackground() {
       const distance = Math.hypot(event.clientX - lastPointerX, event.clientY - lastPointerY);
 
       if (now - lastPointerTime > 75 && distance > 24) {
-        addRipple(event.clientX, event.clientY, 0.48);
+        addRipple(event.clientX, event.clientY, 0.58);
         lastPointerTime = now;
         lastPointerX = event.clientX;
         lastPointerY = event.clientY;
@@ -215,7 +205,11 @@ export default function Home() {
           <WaterRippleBackground />
           <div className="cover-stage">
             <div className="cover-title-frame">
-              <img className="cover-title-image" src="/portfolio-title.png" alt="Portfolio" />
+              <img
+                className="cover-title-image"
+                src="/portfolio-title-transparent.png"
+                alt="Portfolio"
+              />
             </div>
           </div>
           <button

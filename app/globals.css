@@ -74,7 +74,6 @@ a { text-decoration: none; }
   display: block;
   width: 100%;
   height: auto;
-  mix-blend-mode: multiply;
 }
 
 .enter-button {
