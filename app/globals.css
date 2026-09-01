@@ -41,8 +41,9 @@ a { text-decoration: none; }
 
 .cover-stage {
   position: absolute;
-  inset: 0;
+  inset: 14vh 7vw auto;
   display: flex;
+  height: 34vh;
   align-items: center;
   justify-content: center;
 }
@@ -53,7 +54,7 @@ a { text-decoration: none; }
   margin: 0;
   color: #171717;
   font-family: var(--font-windsong), "Brush Script MT", cursive;
-  font-size: clamp(110px, 22vw, 340px);
+  font-size: clamp(96px, 15vw, 230px);
   font-weight: 500;
   letter-spacing: -0.08em;
   line-height: 0.8;
@@ -67,9 +68,9 @@ a { text-decoration: none; }
 .cover-stage h1::after {
   position: absolute;
   z-index: -1;
-  width: 35vw;
-  height: 8vw;
-  border-top: clamp(3px, 0.45vw, 7px) solid currentColor;
+  width: 18vw;
+  height: 5vw;
+  border-top: clamp(3px, 0.36vw, 6px) solid currentColor;
   border-radius: 50%;
   content: "";
   pointer-events: none;
@@ -340,15 +341,20 @@ a { text-decoration: none; }
 }
 
 @media (max-width: 760px) {
+  .cover-stage {
+    inset: 18vh 5vw auto;
+    height: 30vh;
+  }
+
   .cover-stage h1 {
-    font-size: clamp(84px, 25vw, 132px);
+    font-size: clamp(70px, 18vw, 106px);
     letter-spacing: -0.1em;
     transform: rotate(-5deg);
   }
 
   .cover-stage h1::before,
   .cover-stage h1::after {
-    width: 32vw;
+    width: 18vw;
     border-top-width: 3px;
   }
 
