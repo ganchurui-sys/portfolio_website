@@ -30,123 +30,114 @@ a { text-decoration: none; }
   position: fixed;
   inset: 0;
   z-index: 100;
-  display: grid;
   min-height: 100svh;
-  grid-template-rows: auto 1fr auto;
   overflow: hidden;
-  padding: 24px 28px;
-  background: var(--black);
-  color: var(--white);
+  background: #fff;
+  color: #111;
   transition: transform 1.1s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .entry-cover--leaving { transform: translateY(-100%); }
 
-.cover-grid {
+.cover-stage {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(to right, transparent calc(25% - 0.5px), var(--line-light) 25%, transparent calc(25% + 0.5px)),
-    linear-gradient(to right, transparent calc(50% - 0.5px), var(--line-light) 50%, transparent calc(50% + 0.5px)),
-    linear-gradient(to right, transparent calc(75% - 0.5px), var(--line-light) 75%, transparent calc(75% + 0.5px));
-}
-
-.cover-header,
-.cover-footer {
-  position: relative;
-  z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-}
-
-.cover-header {
-  padding-bottom: 22px;
-  border-bottom: 1px solid var(--line-light);
-}
-
-.cover-footer {
-  padding-top: 22px;
-  border-top: 1px solid var(--line-light);
-  color: rgba(242, 240, 233, 0.62);
-}
-
-.cover-stage {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-}
-
-.cover-index {
-  position: absolute;
-  top: 6.5vh;
-  left: 0;
-  margin: 0;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  animation: coverFade 700ms 300ms both;
+  justify-content: center;
 }
 
 .cover-stage h1 {
-  width: 100%;
+  position: relative;
+  z-index: 1;
   margin: 0;
-  font-size: clamp(92px, 15.2vw, 236px);
-  font-weight: 700;
-  letter-spacing: -0.09em;
-  line-height: 0.66;
+  color: #171717;
+  font-family: var(--font-windsong), "Brush Script MT", cursive;
+  font-size: clamp(110px, 22vw, 340px);
+  font-weight: 500;
+  letter-spacing: -0.08em;
+  line-height: 0.8;
+  text-shadow: 12px 18px 18px rgba(0, 0, 0, 0.13);
+  transform: rotate(-3deg);
+  white-space: nowrap;
+  animation: scriptIn 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.cover-stage h1 > span {
-  display: block;
-  animation: titleIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+.cover-stage h1::before,
+.cover-stage h1::after {
+  position: absolute;
+  z-index: -1;
+  width: 35vw;
+  height: 8vw;
+  border-top: clamp(3px, 0.45vw, 7px) solid currentColor;
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
 }
 
-.cover-stage h1 .cover-title-offset {
-  margin-left: 22.5vw;
-  color: var(--blue);
-  animation-delay: 90ms;
+.cover-stage h1::before {
+  top: 58%;
+  right: calc(100% - 0.12em);
+  transform: rotate(8deg);
+}
+
+.cover-stage h1::after {
+  top: 68%;
+  left: calc(100% - 0.06em);
+  transform: rotate(-5deg);
 }
 
 .enter-button {
   position: absolute;
-  right: 8.5vw;
-  bottom: 2.4vh;
-  display: flex;
-  width: clamp(122px, 11.5vw, 176px);
+  right: clamp(24px, 4vw, 64px);
+  bottom: clamp(24px, 4vw, 64px);
+  width: clamp(52px, 4.5vw, 68px);
   aspect-ratio: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  border: 0;
+  border: 1.5px solid #171717;
   border-radius: 50%;
-  background: var(--white);
-  color: var(--black);
+  background: transparent;
   cursor: pointer;
-  animation: buttonIn 650ms 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  transition: background 250ms ease, color 250ms ease, transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: buttonIn 650ms 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: background 240ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.enter-button span { font-size: 17px; font-weight: 700; }
-.enter-button small { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; }
+.enter-button::before,
+.enter-button::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  content: "";
+  transition: border-color 240ms ease, background 240ms ease;
+}
+
+.enter-button::before {
+  width: 20px;
+  height: 1.5px;
+  background: #171717;
+  transform: translate(-58%, -50%);
+}
+
+.enter-button::after {
+  width: 8px;
+  height: 8px;
+  border-top: 1.5px solid #171717;
+  border-right: 1.5px solid #171717;
+  transform: translate(20%, -50%) rotate(45deg);
+}
 
 .enter-button:hover {
-  transform: rotate(-8deg) scale(1.06);
-  background: var(--blue);
-  color: var(--white);
+  transform: rotate(-8deg) scale(1.08);
+  background: #171717;
 }
 
-.enter-button:focus-visible { outline: 3px solid var(--blue); outline-offset: 5px; }
+.enter-button:hover::before { background: #fff; }
+.enter-button:hover::after { border-color: #fff; }
+.enter-button:focus-visible { outline: 2px solid #171717; outline-offset: 5px; }
 
 .entry-cover--leaving .cover-stage h1 {
-  transform: translateY(-6vh);
+  transform: translateY(-5vh) rotate(-3deg) scale(1.04);
   opacity: 0;
-  transition: transform 600ms ease, opacity 400ms ease;
+  transition: transform 700ms ease, opacity 450ms ease;
 }
 
 /* Portfolio home */
@@ -338,42 +329,33 @@ a { text-decoration: none; }
   letter-spacing: 0.14em;
 }
 
-@keyframes titleIn {
-  from { opacity: 0; transform: translateY(110%); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes scriptIn {
+  from { opacity: 0; transform: translateY(28px) rotate(-5deg) scale(0.96); filter: blur(8px); }
+  to { opacity: 1; transform: translateY(0) rotate(-3deg) scale(1); filter: blur(0); }
 }
 
-@keyframes coverFade { from { opacity: 0; } to { opacity: 1; } }
-
 @keyframes buttonIn {
-  from { opacity: 0; transform: scale(0.65) rotate(16deg); }
+  from { opacity: 0; transform: scale(0.65) rotate(14deg); }
   to { opacity: 1; transform: scale(1) rotate(0); }
 }
 
 @media (max-width: 760px) {
-  .entry-cover { padding: 18px; }
-
-  .cover-grid {
-    background-image: linear-gradient(to right, transparent calc(50% - 0.5px), var(--line-light) 50%, transparent calc(50% + 0.5px));
-  }
-
-  .cover-header span:last-child,
-  .cover-footer span:last-child { display: none; }
-
-  .cover-stage { align-items: flex-start; padding-top: 25vh; }
-  .cover-index { top: 6vh; }
-
   .cover-stage h1 {
-    font-size: clamp(74px, 27vw, 126px);
-    line-height: 0.75;
+    font-size: clamp(84px, 25vw, 132px);
+    letter-spacing: -0.1em;
+    transform: rotate(-5deg);
   }
 
-  .cover-stage h1 .cover-title-offset { margin-left: 0; }
+  .cover-stage h1::before,
+  .cover-stage h1::after {
+    width: 32vw;
+    border-top-width: 3px;
+  }
 
   .enter-button {
-    right: 0;
-    bottom: 6vh;
-    width: 116px;
+    right: 20px;
+    bottom: 20px;
+    width: 54px;
   }
 
   .home-nav { padding: 18px; }

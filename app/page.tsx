@@ -43,30 +43,15 @@ export default function Home() {
             }
           }}
         >
-          <div className="cover-grid" aria-hidden="true" />
-
-          <header className="cover-header">
-            <span>PORTFOLIO</span>
-            <span>SELECTED WORK · 2026</span>
-          </header>
-
           <div className="cover-stage">
-            <p className="cover-index">001 / INTRODUCTION</p>
-            <h1 aria-label="Portfolio">
-              <span>PORT</span>
-              <span className="cover-title-offset">FOLIO</span>
-            </h1>
-
-            <button className="enter-button" type="button" onClick={enterPortfolio} autoFocus>
-              <span>进入</span>
-              <small>ENTER&nbsp;&nbsp;↗</small>
-            </button>
+            <h1>Portfolio</h1>
+            <button
+              className="enter-button"
+              type="button"
+              onClick={enterPortfolio}
+              aria-label="进入作品集"
+            />
           </div>
-
-          <footer className="cover-footer">
-            <span>CREATIVE PRACTICE</span>
-            <span>SCROLL AFTER ENTERING</span>
-          </footer>
         </section>
       )}
 
