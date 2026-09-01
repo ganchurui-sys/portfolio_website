@@ -43,11 +43,11 @@ function WaterRippleBackground() {
         x,
         y,
         age: -delay,
-        duration: 1900 + intensity * 650,
+        duration: 1350 + intensity * 450,
         intensity,
       });
 
-      if (ripples.length > 24) ripples.shift();
+      if (ripples.length > 14) ripples.shift();
     };
 
     const resizeCanvas = () => {
@@ -63,11 +63,11 @@ function WaterRippleBackground() {
 
     const drawWave = (ripple: Ripple, progress: number, waveScale: number) => {
       const eased = 1 - Math.pow(1 - progress, 2);
-      const radius = (22 + eased * (170 + ripple.intensity * 165)) * waveScale;
-      const band = 30 + ripple.intensity * 28;
+      const radius = (12 + eased * (72 + ripple.intensity * 68)) * waveScale;
+      const band = 14 + ripple.intensity * 13;
       const outerRadius = radius + band;
       const visibility = Math.sin(progress * Math.PI);
-      const alpha = visibility * (0.24 + ripple.intensity * 0.16);
+      const alpha = visibility * (0.12 + ripple.intensity * 0.08);
       const bandStart = Math.max(0, (radius - band) / outerRadius);
       const shadowPeak = Math.max(bandStart + 0.01, (radius - band * 0.28) / outerRadius);
       const lightPeak = Math.max(shadowPeak + 0.01, (radius + band * 0.22) / outerRadius);
@@ -75,17 +75,17 @@ function WaterRippleBackground() {
 
       context.save();
       context.translate(ripple.x, ripple.y);
-      context.scale(1, 0.7);
+      context.scale(1, 0.78);
 
       const gradient = context.createRadialGradient(0, 0, 0, 0, 0, outerRadius);
-      gradient.addColorStop(0, "rgba(205, 229, 238, 0)");
-      gradient.addColorStop(bandStart, "rgba(205, 229, 238, 0)");
-      gradient.addColorStop(shadowPeak, `rgba(92, 144, 168, ${alpha * 0.72})`);
-      gradient.addColorStop(lightPeak, `rgba(255, 255, 255, ${alpha})`);
-      gradient.addColorStop(softEdge, `rgba(132, 178, 198, ${alpha * 0.34})`);
-      gradient.addColorStop(1, "rgba(205, 229, 238, 0)");
+      gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
+      gradient.addColorStop(bandStart, "rgba(255, 255, 255, 0)");
+      gradient.addColorStop(shadowPeak, `rgba(32, 32, 32, ${alpha * 0.34})`);
+      gradient.addColorStop(lightPeak, `rgba(255, 255, 255, ${alpha * 0.9})`);
+      gradient.addColorStop(softEdge, `rgba(50, 50, 50, ${alpha * 0.16})`);
+      gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
 
-      context.filter = `blur(${2.5 + ripple.intensity * 2.5}px)`;
+      context.filter = `blur(${1.8 + ripple.intensity * 1.8}px)`;
       context.fillStyle = gradient;
       context.fillRect(-outerRadius, -outerRadius, outerRadius * 2, outerRadius * 2);
       context.restore();
@@ -96,11 +96,11 @@ function WaterRippleBackground() {
       lastFrame = time;
       context.clearRect(0, 0, width, height);
 
-      if (time - lastAmbient > 2500) {
+      if (time - lastAmbient > 3600) {
         addRipple(
           width * (0.12 + Math.random() * 0.76),
           height * (0.18 + Math.random() * 0.64),
-          0.32,
+          0.2,
         );
         lastAmbient = time;
       }
@@ -117,7 +117,7 @@ function WaterRippleBackground() {
         }
 
         drawWave(ripple, progress, 1);
-        drawWave(ripple, Math.min(1, progress + 0.12), 0.68);
+        drawWave(ripple, Math.min(1, progress + 0.1), 0.7);
       }
 
       animationFrame = window.requestAnimationFrame(animate);
@@ -127,8 +127,8 @@ function WaterRippleBackground() {
       const now = performance.now();
       const distance = Math.hypot(event.clientX - lastPointerX, event.clientY - lastPointerY);
 
-      if (now - lastPointerTime > 75 && distance > 24) {
-        addRipple(event.clientX, event.clientY, 0.58);
+      if (now - lastPointerTime > 110 && distance > 36) {
+        addRipple(event.clientX, event.clientY, 0.34);
         lastPointerTime = now;
         lastPointerX = event.clientX;
         lastPointerY = event.clientY;
@@ -136,16 +136,15 @@ function WaterRippleBackground() {
     };
 
     const handlePointerDown = (event: PointerEvent) => {
-      addRipple(event.clientX, event.clientY, 1.15);
-      addRipple(event.clientX, event.clientY, 0.9, 150);
-      addRipple(event.clientX, event.clientY, 0.7, 300);
+      addRipple(event.clientX, event.clientY, 0.85);
+      addRipple(event.clientX, event.clientY, 0.48, 170);
     };
 
     resizeCanvas();
 
     if (!reducedMotion) {
-      addRipple(width * 0.24, height * 0.42, 0.38);
-      addRipple(width * 0.72, height * 0.3, 0.3, 500);
+      addRipple(width * 0.24, height * 0.42, 0.24);
+      addRipple(width * 0.72, height * 0.3, 0.2, 650);
       window.addEventListener("resize", resizeCanvas);
       window.addEventListener("pointermove", handlePointerMove, { passive: true });
       window.addEventListener("pointerdown", handlePointerDown, { passive: true });
