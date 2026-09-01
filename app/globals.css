@@ -90,14 +90,16 @@ a { text-decoration: none; }
 
 .enter-button {
   position: absolute;
-  right: clamp(24px, 4vw, 64px);
-  bottom: clamp(24px, 4vw, 64px);
+  right: auto;
+  bottom: clamp(76px, 10vh, 116px);
+  left: 50%;
   width: clamp(52px, 4.5vw, 68px);
   aspect-ratio: 1;
   border: 1.5px solid #171717;
   border-radius: 50%;
   background: transparent;
   cursor: pointer;
+  translate: -50% 0;
   animation: buttonIn 650ms 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
   transition: background 240ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -359,8 +361,9 @@ a { text-decoration: none; }
   }
 
   .enter-button {
-    right: 20px;
-    bottom: 20px;
+    right: auto;
+    bottom: 8vh;
+    left: 50%;
     width: 54px;
   }
 
