@@ -54,33 +54,6 @@ a { text-decoration: none; }
 
 .water-ripple-canvas[data-ready="true"] { opacity: 1; }
 
-.cover-stage {
-  position: absolute;
-  inset: 14vh 7vw auto;
-  z-index: 1;
-  display: flex;
-  height: 34vh;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.cover-title-frame {
-  position: relative;
-  width: min(94vw, 1600px);
-  aspect-ratio: 2 / 1;
-  overflow: visible;
-  animation: titleImageIn 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.cover-title-image {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 .enter-button {
   position: absolute;
   z-index: 2;
@@ -130,12 +103,6 @@ a { text-decoration: none; }
 .enter-button:hover::before { background: #fff; }
 .enter-button:hover::after { border-color: #fff; }
 .enter-button:focus-visible { outline: 2px solid #171717; outline-offset: 5px; }
-
-.entry-cover--leaving .cover-title-frame {
-  transform: translateY(-5vh) scale(1.03);
-  opacity: 0;
-  transition: transform 700ms ease, opacity 450ms ease;
-}
 
 /* Portfolio home */
 .portfolio-home { min-height: 100vh; background: var(--white); }
@@ -326,24 +293,12 @@ a { text-decoration: none; }
   letter-spacing: 0.14em;
 }
 
-@keyframes titleImageIn {
-  from { opacity: 0; transform: translateY(24px) scale(0.98); filter: blur(8px); }
-  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-}
-
 @keyframes buttonIn {
   from { opacity: 0; transform: scale(0.65) rotate(14deg); }
   to { opacity: 1; transform: scale(1) rotate(0); }
 }
 
 @media (max-width: 760px) {
-  .cover-stage {
-    inset: 18vh 5vw auto;
-    height: 30vh;
-  }
-
-  .cover-title-frame { width: 96vw; }
-
   .enter-button {
     right: auto;
     bottom: 8vh;
