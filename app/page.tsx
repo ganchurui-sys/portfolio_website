@@ -12,7 +12,6 @@ function LiquidRefractionBackground() {
     if (!canvas) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const titleImage = new Image();
     let disposed = false;
     let surface: import("threejs-components/build/backgrounds/liquid1.min.js").LiquidSurface | null = null;
 
@@ -20,12 +19,6 @@ function LiquidRefractionBackground() {
       const width = window.innerWidth;
       const height = window.innerHeight;
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      const mobile = width <= 760;
-      const frameWidth = Math.min(width * (mobile ? 0.96 : 0.94), 1600);
-      const frameHeight = frameWidth / 2;
-      const stageTop = height * (mobile ? 0.18 : 0.14);
-      const stageHeight = height * (mobile ? 0.3 : 0.34);
-      const frameTop = stageTop + (stageHeight - frameHeight) / 2;
       const source = document.createElement("canvas");
       const context = source.getContext("2d");
 
@@ -36,19 +29,6 @@ function LiquidRefractionBackground() {
       context.scale(ratio, ratio);
       context.fillStyle = "#ffffff";
       context.fillRect(0, 0, width, height);
-      context.save();
-      context.shadowColor = "rgba(0, 0, 0, 0.22)";
-      context.shadowBlur = Math.max(10, frameWidth * 0.012);
-      context.shadowOffsetX = Math.max(4, frameWidth * 0.005);
-      context.shadowOffsetY = Math.max(8, frameWidth * 0.009);
-      context.drawImage(
-        titleImage,
-        (width - frameWidth) / 2,
-        frameTop,
-        frameWidth,
-        frameHeight,
-      );
-      context.restore();
 
       // ISC-licensed refraction engine used by liquid-refraction-lab.
       const { default: createLiquidSurface } = await import(
@@ -67,12 +47,10 @@ function LiquidRefractionBackground() {
       if (!disposed) canvas.dataset.ready = "true";
     };
 
-    titleImage.addEventListener("load", startSurface, { once: true });
-    titleImage.src = "/portfolio-title-transparent.png";
+    void startSurface();
 
     return () => {
       disposed = true;
-      titleImage.removeEventListener("load", startSurface);
       surface?.dispose();
     };
   }, []);
@@ -81,8 +59,7 @@ function LiquidRefractionBackground() {
     <canvas
       className="water-ripple-canvas"
       ref={canvasRef}
-      role="img"
-      aria-label="Portfolio"
+      aria-hidden="true"
     />
   );
 }
@@ -127,6 +104,15 @@ export default function Home() {
           }}
         >
           <LiquidRefractionBackground />
+          <div className="cover-stage">
+            <div className="cover-title-frame">
+              <img
+                className="cover-title-image"
+                src="/portfolio-title-transparent.png"
+                alt="Portfolio"
+              />
+            </div>
+          </div>
           <button
             className="enter-button"
             type="button"
