@@ -44,7 +44,9 @@ export default function Home() {
           }}
         >
           <div className="cover-stage">
-            <h1>Portfolio</h1>
+            <div className="cover-title-frame">
+              <img className="cover-title-image" src="/portfolio-title.png" alt="Portfolio" />
+            </div>
           </div>
           <button
             className="enter-button"

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, WindSong } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 
@@ -11,12 +11,6 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const windSong = WindSong({
-  variable: "--font-windsong",
-  subsets: ["latin"],
-  weight: "500",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -39,13 +33,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: "/og-script.png", width: 1732, height: 908, alt: "Portfolio" }],
+      images: [{ url: "/portfolio-title.png", width: 1774, height: 887, alt: "Portfolio" }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["/og-script.png"],
+      images: ["/portfolio-title.png"],
     },
   };
 }
@@ -58,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${windSong.variable}`}
+        className={`${geistSans.variable} ${geistMono.variable}`}
       >
         {children}
       </body>
