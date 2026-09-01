@@ -36,6 +36,11 @@ function LiquidRefractionBackground() {
       context.scale(ratio, ratio);
       context.fillStyle = "#ffffff";
       context.fillRect(0, 0, width, height);
+      context.save();
+      context.shadowColor = "rgba(0, 0, 0, 0.22)";
+      context.shadowBlur = Math.max(10, frameWidth * 0.012);
+      context.shadowOffsetX = Math.max(4, frameWidth * 0.005);
+      context.shadowOffsetY = Math.max(8, frameWidth * 0.009);
       context.drawImage(
         titleImage,
         (width - frameWidth) / 2,
@@ -43,6 +48,7 @@ function LiquidRefractionBackground() {
         frameWidth,
         frameHeight,
       );
+      context.restore();
 
       // ISC-licensed refraction engine used by liquid-refraction-lab.
       const { default: createLiquidSurface } = await import(
