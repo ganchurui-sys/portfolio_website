@@ -37,10 +37,10 @@ function LiquidRefractionBackground() {
       if (disposed) return;
 
       surface = createLiquidSurface(canvas);
-      surface.liquidPlane.material.metalness = 0.32;
-      surface.liquidPlane.material.roughness = 0.48;
-      surface.liquidPlane.uniforms.displacementScale.value = reducedMotion ? 0 : 1.55;
-      surface.liquidPlane.attenuation = 0.984;
+      surface.liquidPlane.material.metalness = 0.5;
+      surface.liquidPlane.material.roughness = 0.34;
+      surface.liquidPlane.uniforms.displacementScale.value = reducedMotion ? 0 : 1.8;
+      surface.liquidPlane.attenuation = 0.986;
       surface.setRain(false);
       await surface.loadImage(source.toDataURL("image/png"));
 

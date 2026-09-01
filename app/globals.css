@@ -47,7 +47,8 @@ a { text-decoration: none; }
   height: 100%;
   opacity: 0;
   pointer-events: none;
-  filter: grayscale(1) saturate(0) contrast(1.2);
+  filter: grayscale(1) saturate(0) contrast(1.42) brightness(0.96);
+  mix-blend-mode: multiply;
   transition: opacity 500ms ease;
 }
 
