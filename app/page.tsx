@@ -45,13 +45,13 @@ export default function Home() {
         >
           <div className="cover-stage">
             <h1>Portfolio</h1>
-            <button
-              className="enter-button"
-              type="button"
-              onClick={enterPortfolio}
-              aria-label="进入作品集"
-            />
           </div>
+          <button
+            className="enter-button"
+            type="button"
+            onClick={enterPortfolio}
+            aria-label="进入作品集"
+          />
         </section>
       )}
 
