@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,14 +13,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Portfolio 2026 — Line & Motion",
-  description: "A cinematic portfolio exploring visual systems, space and motion.",
-  icons: {
-    icon: "/favicon.jpg",
-    shortcut: "/favicon.jpg",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const requestHeaders = await headers();
+  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
+  const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+  const baseUrl = new URL(`${protocol}://${host}`);
+  const title = "Portfolio 2026 — Selected Work";
+  const description = "Independent designer and creative thinker — selected work from 2024 to 2026.";
+
+  return {
+    metadataBase: baseUrl,
+    title,
+    description,
+    icons: {
+      icon: "/favicon.jpg",
+      shortcut: "/favicon.jpg",
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [{ url: "/og.png", width: 1731, height: 909, alt: "Portfolio 2026" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og.png"],
+    },
+  };
+}
 
 export default function RootLayout({
   children,
