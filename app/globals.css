@@ -52,14 +52,14 @@ a { text-decoration: none; }
   position: relative;
   z-index: 1;
   width: min(94vw, 1600px);
-  aspect-ratio: 3.25 / 1;
+  aspect-ratio: 2 / 1;
   overflow: hidden;
   animation: titleImageIn 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .cover-title-image {
   position: absolute;
-  top: -30%;
+  top: 0;
   left: 0;
   display: block;
   width: 100%;
