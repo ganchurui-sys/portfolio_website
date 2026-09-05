@@ -3,6 +3,8 @@
 import NextImage from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import PortfolioLanyard from "./components/PortfolioLanyard";
+import UrbanProjectLinks, { ProjectLinks } from "./components/UrbanProjectLinks";
+import { aigcProjects } from "./aigc/projects";
 
 type CoverState = "visible" | "loading" | "leaving" | "hidden";
 
@@ -1409,6 +1411,10 @@ export default function Home() {
             {activeScene === 1 && aboutBadgeTrigger !== null && (
               <PortfolioLanyard key={aboutBadgeTrigger} />
             )}
+            {coverState === "hidden" && activeScene === 2 && <UrbanProjectLinks />}
+            {coverState === "hidden" && activeScene === 3 && (
+              <ProjectLinks projects={aigcProjects} section="aigc" label="AIGC 作品" />
+            )}
 
             <header className="bullet-nav">
               <nav aria-label="首页章节">
@@ -1425,7 +1431,7 @@ export default function Home() {
                 >
                   ABOUT
                 </button>
-                <button type="button" aria-current={activeScene === 2 ? "page" : undefined} onClick={() => scrollToScene(2)}>UCL</button>
+                <button type="button" aria-current={activeScene === 2 ? "page" : undefined} onClick={() => scrollToScene(2)}>URBAN</button>
                 <button type="button" aria-current={activeScene === 3 ? "page" : undefined} onClick={() => scrollToScene(3)}>AIGC</button>
                 <button type="button" aria-current={activeScene === 4 ? "page" : undefined} onClick={() => scrollToScene(4)}>CONTACT</button>
               </nav>
@@ -1449,15 +1455,15 @@ export default function Home() {
               )}
 
               <div className="scene-copy scene-copy--about">
-                <h1>ABOUT<br />ME.</h1>
+                <h1>ABOUT<br />ME</h1>
               </div>
 
               <div className="scene-copy scene-copy--ucl">
-                <h2>UCL /<br />URBAN DESIGN</h2>
+                <h2>URBAN<br />DESIGN</h2>
               </div>
 
               <div className="scene-copy scene-copy--aigc">
-                <h2>AIGC /<br />PRACTICE</h2>
+                <h2>AIGC<br />PRACTICE</h2>
               </div>
 
               <div className="scene-copy scene-copy--contact">

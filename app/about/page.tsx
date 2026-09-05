@@ -21,7 +21,7 @@ export default function AboutPage() {
         <nav className={styles.indexNav} aria-label="作品集页面导航">
           <Link href="/?scene=0">INTRO</Link>
           <Link href="/?scene=1" aria-current="page">ABOUT</Link>
-          <Link href="/?scene=2">UCL</Link>
+          <Link href="/?scene=2">URBAN</Link>
           <Link href="/?scene=3">AIGC</Link>
           <Link href="/?scene=4">CONTACT</Link>
         </nav>

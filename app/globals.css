@@ -822,46 +822,51 @@ a { text-decoration: none; }
   white-space: nowrap;
 }
 
-.scene-copy--about {
-  bottom: 9vh;
-  left: 30px;
+.scene-copy--about,
+.scene-copy--aigc {
+  bottom: 16vh;
+  left: 10.5vw;
   max-width: min(1180px, calc(100vw - 60px));
+}
+
+.scene-copy--about {
   opacity: var(--about-opacity);
   transform: translate3d(0, var(--about-shift), 0);
 }
 
-.scene-copy--about h1 {
+.scene-copy--about h1,
+.scene-copy--ucl h2,
+.scene-copy--aigc h2,
+.scene-copy--contact h2 {
   font-size: clamp(46px, 6.8vw, 112px);
+}
+
+.scene-copy--about h1,
+.scene-copy--aigc h2 {
   line-height: 0.86;
 }
 
-.scene-copy--ucl {
+.scene-copy--ucl,
+.scene-copy--contact {
   top: 24vh;
-  left: 11vw;
+  left: 10.5vw;
+}
+
+.scene-copy--ucl {
   opacity: var(--ucl-opacity);
   transform: translate3d(0, var(--ucl-shift), 0);
 }
 
 .scene-copy--aigc {
-  right: 10vw;
-  bottom: 13vh;
-  text-align: right;
   opacity: var(--aigc-opacity);
   transform: translate3d(0, var(--aigc-shift), 0);
 }
 
 .scene-copy--contact {
-  top: 50%;
-  left: 50%;
-  width: min(920px, 82vw);
-  max-width: none;
-  text-align: center;
   opacity: var(--contact-opacity);
   pointer-events: auto;
-  transform: translate3d(-50%, calc(-46% + var(--contact-shift)), 0);
+  transform: translate3d(0, var(--contact-shift), 0);
 }
-
-.scene-copy--contact h2 { font-size: clamp(64px, 10.5vw, 172px); }
 
 .scene-copy--contact a {
   display: grid;
@@ -985,7 +990,8 @@ a { text-decoration: none; }
     line-height: 0.83;
   }
 
-  .scene-copy--about { bottom: 10vh; }
+  .scene-copy--about,
+  .scene-copy--aigc { bottom: 10vh; }
   .scene-copy--intro {
     top: 32vh;
     left: 18px;
@@ -996,21 +1002,8 @@ a { text-decoration: none; }
     gap: 9px;
     font-size: clamp(22px, 7vw, 30px);
   }
-  .scene-copy--ucl { top: 27vh; }
-
-  .scene-copy--aigc {
-    right: 18px;
-    bottom: 14vh;
-    left: 18px;
-  }
-
-  .scene-copy--contact {
-    top: 50%;
-    left: 50%;
-    width: calc(100% - 36px);
-  }
-
-  .scene-copy--contact h2 { font-size: clamp(58px, 18vw, 96px); }
+  .scene-copy--ucl,
+  .scene-copy--contact { top: 27vh; }
 }
 
 @media (prefers-reduced-motion: reduce) {
