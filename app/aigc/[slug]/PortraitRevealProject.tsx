@@ -6,11 +6,11 @@ import styles from "./portrait-reveal.module.css";
 
 // Adapted from the MIT-licensed WebGL transition by m1ckc3s/ripple.
 const portraits = [
-  { src: "/aigc/project-01/portrait-01.png", alt: "Zhong 的蓝色格纹衬衫人物形象", scale: 1.04, offsetX: 0, offsetY: 0.006 },
-  { src: "/aigc/project-01/portrait-02.png", alt: "Zhong 的紫色赛车外套人物形象", scale: 1.12, offsetX: -0.005, offsetY: -0.013 },
-  { src: "/aigc/project-01/portrait-03.png", alt: "Zhong 的牛仔外套领带人物形象", scale: 0.94, offsetX: 0, offsetY: 0.002 },
-  { src: "/aigc/project-01/portrait-04.png", alt: "Zhong 的黑色连帽外套人物形象", scale: 0.97, offsetX: -0.002, offsetY: -0.006 },
-  { src: "/aigc/project-01/portrait-05.png", alt: "Zhong 的帽子耳机人物形象", scale: 1.06, offsetX: 0, offsetY: 0.006 },
+  { src: "/aigc/project-01/portraits-white-v1/portrait-01.png", alt: "Zhong 的蓝色格纹衬衫人物形象", scale: 1.04, offsetX: 0, offsetY: 0.006 },
+  { src: "/aigc/project-01/portraits-white-v1/portrait-02.png", alt: "Zhong 的紫色赛车外套人物形象", scale: 1.12, offsetX: -0.005, offsetY: -0.013 },
+  { src: "/aigc/project-01/portraits-white-v1/portrait-03.png", alt: "Zhong 的牛仔外套领带人物形象", scale: 0.94, offsetX: 0, offsetY: 0.002 },
+  { src: "/aigc/project-01/portraits-white-v1/portrait-04.png", alt: "Zhong 的黑色连帽外套人物形象", scale: 0.97, offsetX: -0.002, offsetY: -0.006 },
+  { src: "/aigc/project-01/portraits-white-v1/portrait-05.png", alt: "Zhong 的帽子耳机人物形象", scale: 1.06, offsetX: 0, offsetY: 0.006 },
 ] as const;
 
 const VERTEX_SHADER = `
@@ -415,6 +415,7 @@ export default function PortraitRevealProject() {
               alt={index === baseIndex ? portrait.alt : ""}
               fill
               sizes="100vw"
+              unoptimized
               loading="eager"
               draggable={false}
             />

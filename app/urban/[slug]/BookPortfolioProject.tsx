@@ -16,6 +16,7 @@ type PageFlipInstance = {
   currentPage: number;
   totalPages: number;
   isAnimating: boolean;
+  flipTo: (page: number) => void;
   next: () => void;
   prev: () => void;
   destroy: () => void;
@@ -32,6 +33,7 @@ export default function BookPortfolioProject({ title, book }: BookPortfolioProje
   const [currentPage, setCurrentPage] = useState(book.startPage);
   const [totalPages, setTotalPages] = useState(book.pageCount);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [dragSpread, setDragSpread] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -99,6 +101,37 @@ export default function BookPortfolioProject({ title, book }: BookPortfolioProje
     else instance.prev();
   }, []);
 
+  const currentSpread = Math.max(
+    1,
+    book.pageMode === "split-spreads"
+      ? Math.floor(currentPage / 2)
+      : currentPage === 1 ? 1 : Math.floor(currentPage / 2) + 1,
+  );
+  const totalSpreads = Math.max(
+    1,
+    book.pageMode === "split-spreads"
+      ? Math.floor(totalPages / 2)
+      : Math.ceil((totalPages + 1) / 2),
+  );
+  const displayedSpread = dragSpread ?? currentSpread;
+  const progressPercent = totalSpreads === 1
+    ? 100
+    : ((displayedSpread - 1) / (totalSpreads - 1)) * 100;
+
+  const goToSpread = useCallback((spread: number) => {
+    const instance = flipbook.current;
+    if (!instance) return;
+
+    const safeSpread = Math.max(1, Math.min(spread, totalSpreads));
+    const targetPage = book.pageMode === "split-spreads"
+      ? safeSpread * 2
+      : safeSpread === 1 ? 1 : (safeSpread - 1) * 2;
+
+    setCurrentPage(targetPage);
+    setDragSpread(null);
+    instance.flipTo(targetPage);
+  }, [book.pageMode, totalSpreads]);
+
   const handleWheel = (event: React.WheelEvent<HTMLElement>) => {
     if (event.ctrlKey || event.metaKey) return;
     event.preventDefault();
@@ -123,19 +156,6 @@ export default function BookPortfolioProject({ title, book }: BookPortfolioProje
     wheelLockUntil.current = performance.now() + 920;
     turnPage(direction);
   };
-
-  const currentSpread = Math.max(
-    1,
-    book.pageMode === "split-spreads"
-      ? Math.floor(currentPage / 2)
-      : Math.ceil(currentPage / 2),
-  );
-  const totalSpreads = Math.max(
-    1,
-    book.pageMode === "split-spreads"
-      ? Math.floor(totalPages / 2)
-      : Math.ceil(totalPages / 2),
-  );
 
   return (
     <main className={styles.shell}>
@@ -208,11 +228,36 @@ export default function BookPortfolioProject({ title, book }: BookPortfolioProje
             >
               ←
             </button>
-            <div className={styles.progress} aria-live="polite">
-              <span>{padPageNumber(currentSpread)}</span>
-              <i aria-hidden="true">
-                <b style={{ width: `${(currentSpread / totalSpreads) * 100}%` }} />
-              </i>
+            <div className={styles.progress} data-dragging={dragSpread !== null ? "" : undefined} aria-live="polite">
+              <span>{padPageNumber(displayedSpread)}</span>
+              <div className={styles.progressRail}>
+                <i aria-hidden="true">
+                  <b style={{ width: `${progressPercent}%` }} />
+                </i>
+                <input
+                  className={styles.progressInput}
+                  type="range"
+                  min="1"
+                  max={totalSpreads}
+                  step="1"
+                  value={displayedSpread}
+                  disabled={status !== "ready"}
+                  aria-label="拖动跳转到指定跨页"
+                  aria-valuetext={`第 ${displayedSpread} 跨页，共 ${totalSpreads} 跨页`}
+                  onPointerDown={() => setDragSpread(currentSpread)}
+                  onPointerUp={(event) => goToSpread(Number(event.currentTarget.value))}
+                  onPointerCancel={() => setDragSpread(null)}
+                  onChange={(event) => setDragSpread(Number(event.currentTarget.value))}
+                  onKeyUp={(event) => {
+                    if (["ArrowLeft", "ArrowRight", "Home", "End", "PageUp", "PageDown"].includes(event.key)) {
+                      goToSpread(Number(event.currentTarget.value));
+                    }
+                  }}
+                  onBlur={(event) => {
+                    if (dragSpread !== null) goToSpread(Number(event.currentTarget.value));
+                  }}
+                />
+              </div>
               <span>{padPageNumber(totalSpreads)}</span>
             </div>
             <button
