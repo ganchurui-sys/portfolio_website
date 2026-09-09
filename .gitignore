@@ -38,3 +38,8 @@ yarn-error.log*
 /.wrangler/
 /outputs/
 /work/
+
+# Local preparation files, deliverables, and the preserved original PDF.
+/tmp/
+/output/
+/public/urban/ucl-final/ucl-final-design.pdf

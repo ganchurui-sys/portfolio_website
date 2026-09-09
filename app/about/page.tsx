@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.darkPage}`}>
       <header className={styles.header}>
         <Link className={styles.back} href="/" aria-label="返回作品集主页">
           <span aria-hidden="true">←</span>

@@ -1,0 +1,391 @@
+.shell {
+  display: grid;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  grid-template-columns: clamp(280px, 22vw, 420px) minmax(0, 1fr);
+  background: #f4f4f2;
+  color: #111;
+  font-family: var(--font-body);
+}
+
+.introduction {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  min-width: 0;
+  height: 100svh;
+  padding: 0 clamp(26px, 2.2vw, 42px) clamp(24px, 3vh, 38px);
+  border-right: 1px solid #d7d7d4;
+  grid-template-rows: 78px minmax(0, 1fr) auto;
+  background: #fff;
+}
+
+.introduction::after {
+  position: absolute;
+  top: 77px;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: #d7d7d4;
+  content: "";
+  pointer-events: none;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.introductionBody {
+  align-self: center;
+}
+
+.eyebrow {
+  margin: 0 0 22px;
+  color: #7a7a77;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.introduction h1 {
+  max-width: 100%;
+  margin: 0 0 clamp(28px, 4vh, 44px);
+  font-family: var(--portfolio-font);
+  font-size: clamp(36px, 3.4vw, 62px);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.94;
+  text-wrap: balance;
+}
+
+.description {
+  max-width: 32ch;
+  margin: 0;
+  color: #4d4d4a;
+  font-size: clamp(15px, 1vw, 17px);
+  line-height: 1.65;
+}
+
+.projectFacts {
+  display: grid;
+  margin: clamp(30px, 4.5vh, 54px) 0 0;
+  gap: 14px;
+}
+
+.projectFacts div {
+  display: grid;
+  padding-top: 12px;
+  border-top: 1px solid #e3e3e0;
+  gap: 16px;
+  grid-template-columns: 54px minmax(0, 1fr);
+}
+
+.projectFacts dt,
+.projectFacts dd,
+.sidebarHint {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.45;
+}
+
+.projectFacts dt {
+  color: #8a8a87;
+}
+
+.projectFacts dd {
+  letter-spacing: 0.04em;
+}
+
+.sidebarHint {
+  color: #8a8a87;
+  font-size: 11px;
+}
+
+.reader {
+  min-width: 0;
+  height: 100svh;
+  overflow: hidden;
+  outline: none;
+  overscroll-behavior: none;
+}
+
+.readerHeader {
+  padding-inline: clamp(24px, 2.6vw, 50px);
+  border-bottom: 1px solid #d7d7d4;
+  background: rgb(255 255 255 / 86%);
+  backdrop-filter: blur(18px);
+}
+
+.readerBody {
+  position: relative;
+  display: grid;
+  height: calc(100svh - 78px);
+  min-height: 0;
+  padding: clamp(18px, 2.2vh, 30px) clamp(22px, 2.5vw, 48px) clamp(14px, 2vh, 24px);
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+}
+
+.flipbookStage {
+  position: relative;
+  display: grid;
+  width: min(100%, calc((100svh - 174px) * 1.4136));
+  max-height: calc(100svh - 174px);
+  aspect-ratio: 2560 / 1811;
+  align-self: center;
+  justify-self: center;
+  place-items: stretch;
+  transform: translateY(-39px) scale(1.1);
+  transform-origin: center;
+}
+
+.singlePageBook {
+  width: min(100%, calc((100svh - 190px) * 1.3333));
+  max-height: calc(100svh - 190px);
+  aspect-ratio: 4 / 3;
+  transform: none;
+}
+
+.singlePageReaderBody {
+  grid-template-rows: minmax(0, 1fr) 54px;
+}
+
+.singlePageReaderBody .controls {
+  position: static;
+  width: min(100%, 680px);
+  align-self: end;
+  grid-row: 2;
+  justify-self: center;
+  transform: none;
+}
+
+.flipbookHost {
+  --pfo-bg: transparent;
+  --pfo-page-bg: #fff;
+  --pfo-spine-color: rgb(0 0 0 / 28%);
+  --pfo-shadow-color: rgb(0 0 0 / 42%);
+  --pfo-toolbar-height: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+.readerStatus {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  gap: 18px;
+  place-content: center;
+  background: #ececea;
+  color: #686865;
+  text-align: center;
+}
+
+.readerStatus span {
+  display: block;
+  width: 42px;
+  height: 42px;
+  margin: auto;
+  border: 1px solid #aaa;
+  border-top-color: #111;
+  border-radius: 50%;
+  animation: loadingSpin 900ms linear infinite;
+}
+
+.readerStatus p {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.controls {
+  position: absolute;
+  z-index: 6;
+  bottom: clamp(14px, 2vh, 24px);
+  left: 50%;
+  display: grid;
+  width: min(100%, 680px);
+  gap: clamp(16px, 2vw, 30px);
+  grid-template-columns: 40px minmax(0, 1fr) 40px;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.controls button {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #aaa;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  font-size: 18px;
+  line-height: 1;
+  place-items: center;
+  transition: background 180ms ease, color 180ms ease, opacity 180ms ease;
+}
+
+.controls button:hover:not(:disabled),
+.controls button:focus-visible:not(:disabled) {
+  background: #111;
+  color: #fff;
+}
+
+.controls button:focus-visible {
+  outline: 1px solid #111;
+  outline-offset: 4px;
+}
+
+.controls button:disabled {
+  cursor: default;
+  opacity: 0.24;
+}
+
+.progress {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.progress i {
+  position: relative;
+  display: block;
+  height: 1px;
+  overflow: hidden;
+  background: #bdbdb9;
+}
+
+.progress b {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: block;
+  background: #111;
+  transition: width 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes loadingSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .introduction {
+    height: auto;
+    min-height: 168px;
+    padding: 0 18px 18px;
+    border-right: 0;
+    border-bottom: 1px solid #d7d7d4;
+    grid-template-rows: 54px auto;
+  }
+
+  .introduction::after {
+    top: 53px;
+  }
+
+  .sidebarHeader {
+    min-height: 54px;
+  }
+
+  .introductionBody {
+    display: grid;
+    gap: 10px 18px;
+    grid-template-columns: minmax(120px, 0.7fr) minmax(0, 1.3fr);
+    align-items: end;
+  }
+
+  .eyebrow,
+  .projectFacts,
+  .sidebarHint {
+    display: none;
+  }
+
+  .introduction h1 {
+    max-width: 12ch;
+    margin: 0;
+    font-size: clamp(30px, 7vw, 52px);
+  }
+
+  .description {
+    max-width: 48ch;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .reader {
+    height: auto;
+    min-height: 0;
+  }
+
+  .readerHeader {
+    height: 50px;
+    padding-inline: 18px;
+  }
+
+  .readerHeader > :first-child,
+  .readerHeader > :nth-child(2) {
+    display: none;
+  }
+
+  .readerHeader nav {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 9px;
+  }
+
+  .readerBody {
+    height: calc(100svh - 218px);
+    padding: 14px 18px 10px;
+  }
+
+  .flipbookStage {
+    width: min(100%, calc((100svh - 290px) * 1.4136));
+    max-height: calc(100svh - 290px);
+    transform: translateY(-25px) scale(1.04);
+  }
+
+  .singlePageBook {
+    width: min(100%, calc((100svh - 300px) * 1.3333));
+    max-height: calc(100svh - 300px);
+    aspect-ratio: 4 / 3;
+    transform: none;
+  }
+
+  .singlePageReaderBody {
+    grid-template-rows: minmax(0, 1fr) 50px;
+  }
+
+  .singlePageReaderBody .controls {
+    width: 100%;
+  }
+
+  .controls {
+    bottom: 10px;
+    width: calc(100% - 36px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .readerStatus span {
+    animation-duration: 1.8s;
+  }
+}

@@ -5,6 +5,9 @@ import { notFound } from "next/navigation";
 import navigationStyles from "../../about/about.module.css";
 import styles from "../../urban/urban.module.css";
 import { aigcProjects, getAigcProject, AIGC_RETURN_HREF } from "../projects";
+import PortraitRevealProject from "./PortraitRevealProject";
+import PoseGallery from "./PoseGallery";
+import revealStyles from "./portrait-reveal.module.css";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
@@ -22,7 +25,9 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
   return {
     title: `${project.title} — AIGC — Zhongism`,
-    description: project.summary || "Zhong 的 AIGC 作品，项目内容待上传。",
+    description: project.slug === "project-01"
+      ? "Zhong 的 AIGC 人物形象交互实验。"
+      : project.summary || "Zhong 的 AIGC 作品，项目内容待上传。",
   };
 }
 
@@ -31,7 +36,7 @@ export default async function AigcProjectPage({ params }: ProjectPageProps) {
   if (!project) notFound();
 
   return (
-    <main className={navigationStyles.page}>
+    <main className={`${navigationStyles.page} ${project.slug === "project-01" ? revealStyles.page : ""}`}>
       <header className={navigationStyles.header}>
         <Link
           className={navigationStyles.back}
@@ -51,7 +56,7 @@ export default async function AigcProjectPage({ params }: ProjectPageProps) {
         </nav>
       </header>
 
-      <article className={styles.project}>
+      {project.slug === "project-01" ? <><PortraitRevealProject /><PoseGallery /></> : <article className={styles.project}>
         <header className={styles.intro}>
           <div>
             <p className={styles.eyebrow}>AIGC / CREATIVE PRACTICE</p>
@@ -82,7 +87,7 @@ export default async function AigcProjectPage({ params }: ProjectPageProps) {
             </div>
           )}
         </section>
-      </article>
+      </article>}
     </main>
   );
 }

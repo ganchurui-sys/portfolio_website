@@ -4,41 +4,42 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
 import styles from "./about.module.css";
+import InternshipExperience from "./InternshipExperience";
+import ProjectExperience from "./ProjectExperience";
+import PortraitFrame from "./PortraitFrame";
 import { createPortraitMotion, portraitClipSource, PORTRAIT_BACKWARD_SRC, PORTRAIT_FORWARD_SRC, PORTRAIT_POSTER_SRC } from "./portrait-motion";
 
 const sections = [
   {
     title: "PROFILE",
-    content: <>
-      <p className={styles.lead}>HELLO, I&apos;M ZHONG.</p>
-      <p>An urban designer working across spatial thinking, visual systems and AI-generated creative practice.</p>
-    </>,
+    content: <div className={styles.profileCopy} lang="zh-CN">
+      <h2 className={styles.profileTitle}>你好，我是干楚锐。</h2>
+      <p>一名游走于视觉、建筑与城市之间的跨学科设计师，拥有美术、建筑设计与城市设计背景，同时持续探索 AIGC 与数字技术在设计中的应用。</p>
+      <p>我的实践从平面视觉延伸到建筑空间与城市尺度，通过视觉设计、三维建模、计算设计与生成式工具，探索不同媒介之间的连接，并将复杂的空间与概念转化为清晰而具有辨识度的设计语言。</p>
+    </div>,
   },
   {
     title: "EDUCATION",
-    content: <>
-      <p className={styles.lead}>UCL</p>
-      <dl className={styles.moduleList}>
-        <div><dt>FIELD</dt><dd>URBAN DESIGN</dd></div>
-        <div><dt>BASE</dt><dd>LONDON, UK</dd></div>
-      </dl>
-    </>,
+    content: <div className={styles.educationCopy} lang="zh-CN">
+      <section className={styles.educationEntry}>
+        <h2 className={styles.educationSchool}>伦敦大学学院 UCL</h2>
+        <p className={styles.educationDegree}><strong lang="en">Urban Design MArch</strong></p>
+        <p className={styles.educationDates}>2025 — 2026</p>
+      </section>
+      <section className={styles.educationEntry}>
+        <h2 className={styles.educationSchool}>西安美术学院</h2>
+        <p className={styles.educationDegree}><strong>建筑环境艺术系 · 本科</strong></p>
+        <p className={styles.educationDates}>2018 — 2022</p>
+      </section>
+    </div>,
   },
   {
-    title: "PRACTICE",
-    content: <ul className={styles.practiceList}>
-      <li>SPATIAL THINKING</li>
-      <li>GENERATIVE DESIGN</li>
-      <li>VISUAL SYSTEMS</li>
-      <li>CREATIVE TECHNOLOGY</li>
-    </ul>,
+    title: "INTERNSHIP EXPERIENCE",
+    content: <InternshipExperience />,
   },
   {
-    title: "DETAILS",
-    content: <>
-      <p>Exploring how emerging technology can make places, ideas and interactions more memorable and human.</p>
-      <p className={styles.siteAddress}>ZHONGISM.DESIGN ↗</p>
-    </>,
+    title: "PROJECT EXPERIENCE",
+    content: <ProjectExperience />,
   },
 ];
 
@@ -105,9 +106,9 @@ export default function AboutExperience() {
   };
 
   return (
-    <section className={styles.stage} aria-label="自我介绍">
+    <section className={styles.stage} data-section={activeSection} aria-label="自我介绍">
       <figure className={styles.portraitPanel} id="about-portrait" aria-label="随模块切换表情的 Zhong 卡通人物">
-        <div className={styles.portraitMedia}>
+        <PortraitFrame>
           <Image
             className={styles.portraitImage}
             data-active="true"
@@ -116,7 +117,7 @@ export default function AboutExperience() {
             aria-hidden="true"
             fill
             unoptimized
-            sizes="(max-width: 700px) 100vw, 48vw"
+            sizes="(max-width: 700px) 90vw, 28vw"
             loading="eager"
             fetchPriority="high"
           />
@@ -138,7 +139,7 @@ export default function AboutExperience() {
             preload="auto"
             aria-hidden="true"
           />
-        </div>
+        </PortraitFrame>
         {mediaError && <figcaption role="status">{mediaError}</figcaption>}
       </figure>
 
@@ -168,7 +169,7 @@ export default function AboutExperience() {
           <div
             key={section.title}
             id={`about-panel-${index}`}
-            className={styles.contentPanel}
+            className={`${styles.contentPanel} ${index >= 2 ? styles.experiencePanel : ""}`}
             role="tabpanel"
             aria-labelledby={`about-tab-${index}`}
             hidden={activeSection !== index}

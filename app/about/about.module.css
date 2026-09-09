@@ -1,9 +1,25 @@
 .page {
+  --about-background: #fff;
+  --about-heading: #0c0d0d;
+  --about-body: #4a4a4a;
+  --about-muted: #777979;
+  --about-number: #838585;
+  --about-divider: #e6e6e6;
   min-height: 100svh;
   padding: 0 32px 24px;
-  background: #fff;
-  color: #0c0d0d;
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--about-background);
+  color: var(--about-heading);
+  font-family: var(--font-body);
+}
+
+.darkPage {
+  --about-background: #000;
+  --about-heading: #f5f5f5;
+  --about-body: #b8b8b8;
+  --about-muted: #999b9b;
+  --about-number: #898b8b;
+  --about-divider: #2c2c2c;
+  color-scheme: dark;
 }
 
 .header {
@@ -74,27 +90,131 @@
 }
 
 .stage {
+  --about-column-gap: clamp(24px, 4vw, 80px);
+  --about-nav-shift: clamp(-11vw, calc(60px - 15vw), 0px);
   display: grid;
   min-height: calc(100svh - 102px);
-  gap: clamp(24px, 4vw, 80px);
+  gap: var(--about-column-gap);
   grid-template-columns: minmax(0, 1fr) clamp(144px, 10vw, 205px) minmax(0, 34%);
   align-items: start;
 }
 
 .portraitPanel {
+  --portrait-frame-inset: max(0px, calc(7.3vw - 32px));
+  --portrait-frame-top: max(16px, calc(17.7svh - 78px));
   position: sticky;
   top: 0;
   height: calc(100svh - 102px);
   min-height: calc(100svh - 102px);
   overflow: hidden;
   margin: 0;
-  background: #fff;
+  background: transparent;
   isolation: isolate;
 }
 
-.portraitMedia {
+.portraitCard {
   position: absolute;
-  inset: 0;
+  top: var(--portrait-frame-top);
+  left: var(--portrait-frame-inset);
+  display: grid;
+  /* Reserve a real gap before the translated index, even on small desktops. */
+  width: min(27.8vw, calc(100% - var(--portrait-frame-inset) + var(--about-column-gap) + var(--about-nav-shift) - 24px));
+  height: min(70svh, calc(100% - var(--portrait-frame-top) - 24px));
+  grid-template-rows: clamp(36px, 5svh, 52px) clamp(30px, 4.5svh, 44px) minmax(0, 1fr) clamp(36px, 5.5svh, 52px) clamp(40px, 6svh, 58px);
+  padding: 0 clamp(7px, 0.5vw, 12px);
+  overflow: hidden;
+  border: 1px solid #e7e7e7;
+  border-radius: 12px;
+  background: #fff;
+  color: #242424;
+  color-scheme: light;
+  container-type: inline-size;
+  isolation: isolate;
+}
+
+.frameHeader,
+.frameAccount,
+.frameActions,
+.frameNavigation {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: clamp(10px, 3cqw, 20px);
+  padding-inline: clamp(4px, 1.5cqw, 12px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.portraitCard svg {
+  display: block;
+  width: clamp(18px, 5.2cqw, 28px);
+  height: clamp(18px, 5.2cqw, 28px);
+  flex-shrink: 0;
+}
+
+.frameHeader {
+  border-bottom: 1px solid #ededed;
+}
+
+.frameWordmark {
+  flex: 1;
+  font-family: "Brush Script MT", "Segoe Script", cursive;
+  font-size: clamp(22px, 6.5cqw, 36px);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.frameVideoIcon {
+  position: relative;
+}
+
+.frameVideoIcon i {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e83146;
+}
+
+.frameAccount {
+  justify-content: space-between;
+}
+
+.frameAvatar {
+  width: clamp(22px, 6.4cqw, 34px);
+  aspect-ratio: 1;
+  padding: 1px;
+  border: 1px solid #cc849f;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.frameHeart {
+  color: #e21e35;
+}
+
+.frameBookmark {
+  margin-left: auto;
+}
+
+.frameNavigation {
+  justify-content: space-around;
+  border-top: 1px solid #ededed;
+}
+
+.portraitMedia {
+  --portrait-optical-offset: 4%;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #ededed;
+  border-radius: 8px;
+  background: #fff;
   z-index: 1;
 }
 
@@ -104,8 +224,10 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: center center;
+  /* Center the subject, whose visual midpoint sits left of the source canvas. */
+  transform: translateX(var(--portrait-optical-offset));
   opacity: 0;
   transition: opacity 360ms ease-in-out;
   pointer-events: none;
@@ -138,6 +260,7 @@
 
 .moduleNav {
   display: flex;
+  width: max-content;
   min-width: 0;
   padding-top: 12px;
   flex-direction: column;
@@ -152,7 +275,7 @@
   gap: 8px;
   border: 0;
   background: transparent;
-  color: #777979;
+  color: var(--about-muted);
   font-size: clamp(14px, 0.75vw, 15px);
   font-weight: 700;
   letter-spacing: 0.07em;
@@ -167,7 +290,7 @@
 
 .moduleButton:hover,
 .moduleButton[aria-selected="true"] {
-  color: #0c0d0d;
+  color: var(--about-heading);
 }
 
 .moduleButton[aria-selected="true"] .moduleTitle {
@@ -180,9 +303,17 @@
 }
 
 .moduleNumber {
-  color: #838585;
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding-top: 2px;
+  color: var(--about-number);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
+}
+
+.moduleTitle {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .moduleContent {
@@ -209,8 +340,8 @@
 }
 
 .moduleBody {
-  max-width: 520px;
-  font-size: clamp(16px, 0.9vw, 18px);
+  max-width: 780px;
+  font-size: var(--font-size-body);
   line-height: 1.5;
 }
 
@@ -225,10 +356,170 @@
 }
 
 .lead {
-  font-size: clamp(25px, 2vw, 38px);
+  font-size: var(--font-size-content-title);
   font-weight: 700;
   letter-spacing: -0.06em;
   line-height: 1.08;
+}
+
+.profileCopy {
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: var(--line-height-body-zh);
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-break: strict;
+}
+
+.profileTitle {
+  margin: 0 0 var(--space-copy-paragraph);
+  font-size: var(--font-size-content-title);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: var(--line-height-title-zh);
+}
+
+.profileCopy p {
+  color: var(--about-body);
+}
+
+.profileCopy p + p {
+  margin-top: var(--space-copy-paragraph);
+}
+
+.educationCopy {
+  display: grid;
+  gap: 2rem;
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: var(--line-height-body-zh);
+}
+
+.educationSchool {
+  margin: 0 0 0.5rem;
+  font-size: var(--font-size-content-title);
+  font-weight: 700;
+  line-height: var(--line-height-title-zh);
+}
+
+.educationDegree strong {
+  font-weight: 700;
+}
+
+.educationEntry .educationDates {
+  margin-top: 0.5rem;
+  color: var(--about-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.experienceCopy {
+  color: var(--about-body);
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: var(--line-height-body-zh);
+  overflow-wrap: break-word;
+  line-break: strict;
+}
+
+.experienceEntry + .experienceEntry {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--about-divider);
+}
+
+.experienceDates {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.experienceEntry > .experienceDates {
+  margin-top: 1rem;
+}
+
+.experienceSummary {
+  display: flex;
+  min-height: 44px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 6px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.experienceSummary::-webkit-details-marker {
+  display: none;
+}
+
+.experienceSummary::marker {
+  content: "";
+}
+
+.experienceSummary:focus-visible {
+  outline: 1px solid var(--about-heading);
+  outline-offset: 4px;
+}
+
+.experienceSummary:hover .experienceTitle {
+  color: var(--about-body);
+}
+
+.experienceToggle {
+  flex: 0 0 1.25rem;
+  color: var(--about-muted);
+  font-size: 1.5rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.experienceToggle::before {
+  content: "+";
+}
+
+.experienceEntry[open] .experienceToggle::before {
+  content: "−";
+}
+
+.experienceEntry:not([open]) > :not(summary) {
+  display: none;
+}
+
+.experienceTitle {
+  margin: 0;
+  color: var(--about-heading);
+  font-size: var(--font-size-entry-title);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.experienceEntry .experiencePoints {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+  padding-left: 1.2em;
+  list-style: disc;
+}
+
+.experiencePoints strong {
+  color: inherit;
+  font-weight: 400;
+}
+
+.experiencePoints li > strong:first-child {
+  color: var(--about-heading);
+  font-weight: 700;
+}
+
+@media (min-width: 701px) {
+  .experiencePanel {
+    max-height: calc(100svh - 166px);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    padding-right: 12px;
+  }
 }
 
 .moduleList {
@@ -251,7 +542,7 @@
 }
 
 .moduleList dt {
-  color: #777979;
+  color: var(--about-muted);
 }
 
 .practiceList {
@@ -278,7 +569,25 @@
     position: relative;
     z-index: 2;
     /* Keep the titles to the right of the portrait, with extra clearance on narrower screens. */
-    transform: translateX(clamp(-11vw, calc(60px - 15vw), 0px));
+    transform: translateX(var(--about-nav-shift));
+  }
+}
+
+@media (min-width: 1280px) {
+  .moduleContent {
+    --content-left-shift: clamp(64px, 6vw, 112px);
+    width: calc(100% + var(--content-left-shift));
+    margin-left: calc(-1 * var(--content-left-shift));
+  }
+
+  .profileTitle,
+  .educationSchool,
+  .experienceTitle {
+    white-space: nowrap;
+  }
+
+  .experienceSummary {
+    align-items: center;
   }
 }
 
@@ -288,11 +597,27 @@
   }
 
   .stage {
+    --about-column-gap: 20px;
+    --about-nav-shift: 0px;
     gap: 20px;
-    grid-template-columns: minmax(0, 1fr) 144px minmax(0, 34%);
+    grid-template-columns: minmax(0, 1fr) max-content;
   }
 
   .moduleContent {
+    grid-column: 1 / -1;
+    padding-right: 0;
+  }
+
+  .portraitCard {
+    left: 0;
+    width: min(90%, 342px);
+    height: min(70svh, calc(100% - var(--portrait-frame-top) - 24px));
+  }
+
+  .experiencePanel {
+    max-height: none;
+    overflow: visible;
+    overscroll-behavior-y: auto;
     padding-right: 0;
   }
 }
@@ -318,16 +643,27 @@
   }
 
   .stage {
-    grid-template-columns: 144px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px 16px;
     min-height: auto;
   }
 
   .portraitPanel {
+    position: relative;
     grid-column: 1 / -1;
     z-index: 4;
-    height: 48svh;
+    height: auto;
     min-height: 0;
+  }
+
+  .portraitCard {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: min(90%, 342px);
+    height: min(76svh, 620px);
+    min-height: 400px;
+    margin: 8px auto 0;
   }
 
   .portraitPanel figcaption {

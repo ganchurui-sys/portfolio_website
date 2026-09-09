@@ -50,7 +50,11 @@ function LiquidRefractionBackground() {
       const height = window.innerHeight;
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
       const mobile = width <= 760;
-      const frameWidth = Math.min(width * (mobile ? 0.96 : 0.94), 1600);
+      const frameWidth = Math.min(
+        width * (mobile ? 0.96 : 0.94),
+        height * 1.5,
+        1600,
+      );
       const frameHeight = frameWidth / 2;
       const stageTop = height * (mobile ? 0.18 : 0.14);
       const stageHeight = height * (mobile ? 0.3 : 0.34);
@@ -105,7 +109,7 @@ function LiquidRefractionBackground() {
     };
 
     titleImage.addEventListener("load", startSurface, { once: true });
-    titleImage.src = "/portfolio-title-transparent.png";
+    titleImage.src = "/portfolio-title-brush.png";
 
     return () => {
       disposed = true;
