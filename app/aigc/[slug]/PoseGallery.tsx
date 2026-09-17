@@ -5,12 +5,26 @@ import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import styles from "./pose-gallery.module.css";
 
-const poses = Array.from({ length: 9 }, (_, index) => ({
-  src: `/aigc/project-01/poses-alpha-v1/pose-${String(index + 1).padStart(2, "0")}.png`,
-  alt: `Zhong 个人 IP 动作形象 ${index + 1}`,
-  width: index === 5 || index === 7 ? 1248 : 1296,
-  height: index === 5 || index === 7 ? 1872 : 1728,
-}));
+const poses = [
+  ...Array.from({ length: 9 }, (_, index) => ({
+    src: `/aigc/project-01/poses-alpha-v1/pose-${String(index + 1).padStart(2, "0")}.png`,
+    alt: `Zhong 个人 IP 动作形象 ${index + 1}`,
+    width: index === 5 || index === 7 ? 1248 : 1296,
+    height: index === 5 || index === 7 ? 1872 : 1728,
+  })),
+  {
+    src: "/aigc/project-01/poses-alpha-v1/pose-10.png",
+    alt: "Zhong 个人 IP 动作形象 10：灰色卫衣与宽松牛仔裤站姿",
+    width: 2592,
+    height: 3456,
+  },
+  {
+    src: "/aigc/project-01/poses-alpha-v1/pose-11.png",
+    alt: "Zhong 个人 IP 动作形象 11：金发、棕色夹克坐姿",
+    width: 2160,
+    height: 3840,
+  },
+];
 
 const formatNumber = (value: number) => String(value).padStart(2, "0");
 
@@ -118,7 +132,7 @@ export default function PoseGallery() {
     >
       <header className={styles.header}>
         <h2 id="pose-gallery-heading">POSE STUDIES</h2>
-        <span>01—09</span>
+        <span>01—{formatNumber(poses.length)}</span>
       </header>
 
       <div className={styles.viewport} ref={viewportRef}>
