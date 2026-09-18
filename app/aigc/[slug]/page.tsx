@@ -59,8 +59,8 @@ export default async function AigcProjectPage({ params }: ProjectPageProps) {
 
       {project.slug === "project-01" ? (
         <>
-          <PortraitRevealProject />
           <ProjectIntroduction />
+          <PortraitRevealProject />
           <PoseGallery />
         </>
       ) : <article className={styles.project}>
