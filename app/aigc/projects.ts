@@ -11,7 +11,7 @@ export type AigcProject = {
   }[];
 };
 
-// Add the supplied AIGC project introductions and media here later.
+// Add new AIGC projects here when their content is ready.
 export const aigcProjects: AigcProject[] = [
   {
     slug: "project-01",
@@ -19,10 +19,6 @@ export const aigcProjects: AigcProject[] = [
     summary: "An interactive AIGC character identity study.",
     images: [],
   },
-  { slug: "project-02", title: "PROJECT 02", summary: "", images: [] },
-  { slug: "project-03", title: "PROJECT 03", summary: "", images: [] },
-  { slug: "project-04", title: "PROJECT 04", summary: "", images: [] },
-  { slug: "project-05", title: "PROJECT 05", summary: "", images: [] },
 ];
 
 export const AIGC_RETURN_HREF = "/?scene=3";

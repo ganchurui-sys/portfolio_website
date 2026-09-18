@@ -25,6 +25,21 @@
   list-style: none;
 }
 
+.updating .list {
+  height: auto;
+}
+
+.updateNote {
+  margin: 18px 0 0;
+  color: rgb(255 255 255 / 70%);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.65;
+  animation: projectReveal 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 .item {
   display: flex;
   min-width: 0;
@@ -125,7 +140,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .item {
+  .item,
+  .updateNote {
     animation: none;
   }
 

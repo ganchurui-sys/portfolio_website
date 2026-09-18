@@ -9,11 +9,16 @@ type ProjectLinksProps = {
   projects: ReadonlyArray<{ slug: string; title: string }>;
   section: "urban" | "aigc";
   label: string;
+  updateNote?: string;
 };
 
-export function ProjectLinks({ projects, section, label }: ProjectLinksProps) {
+export function ProjectLinks({ projects, section, label, updateNote }: ProjectLinksProps) {
   return (
-    <nav className={styles.nav} data-section={section} aria-label={label}>
+    <nav
+      className={updateNote ? `${styles.nav} ${styles.updating}` : styles.nav}
+      data-section={section}
+      aria-label={label}
+    >
       <ol
         className={styles.list}
         style={{ gridTemplateRows: `repeat(${projects.length}, minmax(0, 1fr))` }}
@@ -36,6 +41,14 @@ export function ProjectLinks({ projects, section, label }: ProjectLinksProps) {
           </li>
         ))}
       </ol>
+      {updateNote && (
+        <p
+          className={styles.updateNote}
+          style={{ animationDelay: `${urbanProjectRevealDelay(projects.length)}ms` }}
+        >
+          {updateNote}
+        </p>
+      )}
     </nav>
   );
 }

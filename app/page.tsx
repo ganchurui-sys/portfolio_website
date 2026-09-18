@@ -1417,7 +1417,12 @@ export default function Home() {
             )}
             {coverState === "hidden" && activeScene === 2 && <UrbanProjectLinks />}
             {coverState === "hidden" && activeScene === 3 && (
-              <ProjectLinks projects={aigcProjects} section="aigc" label="AIGC 作品" />
+              <ProjectLinks
+                projects={aigcProjects}
+                section="aigc"
+                label="AIGC 作品"
+                updateNote="More projects coming soon."
+              />
             )}
 
             <header className="bullet-nav">
