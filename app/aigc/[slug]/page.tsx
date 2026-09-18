@@ -6,6 +6,7 @@ import navigationStyles from "../../about/about.module.css";
 import styles from "../../urban/urban.module.css";
 import { aigcProjects, getAigcProject, AIGC_RETURN_HREF } from "../projects";
 import PortraitRevealProject from "./PortraitRevealProject";
+import ProjectIntroduction from "./ProjectIntroduction";
 import PoseGallery from "./PoseGallery";
 import revealStyles from "./portrait-reveal.module.css";
 
@@ -56,7 +57,13 @@ export default async function AigcProjectPage({ params }: ProjectPageProps) {
         </nav>
       </header>
 
-      {project.slug === "project-01" ? <><PortraitRevealProject /><PoseGallery /></> : <article className={styles.project}>
+      {project.slug === "project-01" ? (
+        <>
+          <PortraitRevealProject />
+          <ProjectIntroduction />
+          <PoseGallery />
+        </>
+      ) : <article className={styles.project}>
         <header className={styles.intro}>
           <div>
             <p className={styles.eyebrow}>AIGC / CREATIVE PRACTICE</p>
