@@ -14,14 +14,14 @@ export default function ProjectIntroduction() {
 
       <div className={styles.description}>
         <p lang="en">
-          Interactive Identity explores how AI can be used to build a consistent yet flexible
-          digital character across different styles, poses, expressions and visual states.
-          Through iterative generation, selection and refinement, the project transforms a
-          single identity into an evolving visual system designed for digital and interactive
-          experiences.
+          Interactive Identity is inspired by my own appearance and everyday outfits.
+          Using AI, I translate my facial features, hairstyles and clothing choices into a
+          digital character, then explore different looks, poses and expressions while
+          retaining a recognisable identity. The project brings personal style and everyday
+          self-expression into digital and interactive experiences.
         </p>
         <p lang="zh-CN">
-          Interactive Identity 探索如何运用 AI，在不同风格、姿态、表情与视觉状态之间，构建兼具一致性与灵活性的数字角色。通过反复生成、筛选与优化，项目将单一角色形象拓展为持续演变的视觉系统，服务于数字与交互体验。
+          Interactive Identity 以我的个人形象与日常穿搭为灵感，通过 AI 将自己的面部特征、发型与服装搭配转化为数字角色。在保留个人辨识度的基础上，探索不同的造型、动作与表情，将日常生活中的风格与自我表达延伸至数字和交互体验。
         </p>
       </div>
 

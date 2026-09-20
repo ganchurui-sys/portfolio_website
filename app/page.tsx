@@ -1178,7 +1178,7 @@ export default function Home() {
     const handleStageTouchStart = (event: TouchEvent) => {
       if (
         event.target instanceof Element &&
-        event.target.closest(".about-work-badge__card")
+        event.target.closest(".about-work-badge__card, [data-portfolio-lanyard]")
       ) {
         touchStartY = null;
         return;

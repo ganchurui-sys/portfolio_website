@@ -8,6 +8,8 @@ import { aigcProjects, getAigcProject, AIGC_RETURN_HREF } from "../projects";
 import PortraitRevealProject from "./PortraitRevealProject";
 import ProjectIntroduction from "./ProjectIntroduction";
 import PoseGallery from "./PoseGallery";
+import CharacterTurnarounds from "./CharacterTurnarounds";
+import ExpressionStudies from "./ExpressionStudies";
 import revealStyles from "./portrait-reveal.module.css";
 
 type ProjectPageProps = {
@@ -62,6 +64,8 @@ export default async function AigcProjectPage({ params }: ProjectPageProps) {
           <ProjectIntroduction />
           <PortraitRevealProject />
           <PoseGallery />
+          <CharacterTurnarounds />
+          <ExpressionStudies />
         </>
       ) : <article className={styles.project}>
         <header className={styles.intro}>
