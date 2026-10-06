@@ -43,3 +43,6 @@ yarn-error.log*
 /tmp/
 /output/
 /public/urban/ucl-final/ucl-final-design.pdf
+
+# Original 4K film is restored from its pinned release asset before production builds.
+/public/aigc/project-02/airpods-max-full-film-4k-clean-v3.mp4

@@ -1,0 +1,110 @@
+.subtitle {
+  display: grid;
+  gap: 8px;
+}
+
+.titleTranslation {
+  font-style: normal;
+  line-height: var(--line-height-body-zh);
+}
+
+.overviewHeading {
+  display: flex;
+  margin: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  color: #161616;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+}
+
+.headingTranslation {
+  color: #4a4a4a;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+.hero {
+  margin: 0;
+  border-block: 1px solid #dededb;
+}
+
+.heroImage,
+.heroVideo,
+.sectionImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.heroVideo {
+  background: #000;
+}
+
+.hero figcaption {
+  margin: 14px 0;
+  color: #4a4a4a;
+  font-size: var(--font-size-body);
+  line-height: 1.5;
+}
+
+.contentSection {
+  align-items: start;
+}
+
+.sectionVisual {
+  min-width: 0;
+  margin: 0;
+}
+
+.fullFilmSection {
+  padding: clamp(40px, 5vw, 80px) 20px clamp(48px, 7vw, 112px);
+  background: #fff;
+  color: #161616;
+  font-family: var(--font-body);
+  scroll-margin-top: 24px;
+}
+
+.fullFilmHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 28px;
+}
+
+.fullFilmDuration {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  color: #4a4a4a;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+}
+
+.fullFilmDuration span {
+  color: #999;
+}
+
+.fullFilmFigure {
+  margin: 0;
+}
+
+.fullFilmFigure video:focus-visible {
+  outline: 2px solid #161616;
+  outline-offset: 4px;
+}
+
+@media (max-width: 700px) {
+  .fullFilmSection {
+    padding-inline: 8px;
+  }
+}

@@ -384,7 +384,7 @@ export default function PortraitRevealProject() {
       type="button"
       ref={stageRef}
       className={styles.experience}
-      aria-label="AIGC Project 01 人物形象交互，点击以波纹切换下一形象"
+      aria-label="01 AI Avatar Design 人物形象交互，点击以波纹切换下一形象"
       onPointerDown={(event) => {
         const point = pointFromEvent(event.clientX, event.clientY);
         if (point) trigger(point);
@@ -426,8 +426,8 @@ export default function PortraitRevealProject() {
       <canvas ref={canvasRef} className={styles.revealCanvas} aria-hidden="true" />
 
       <div className={styles.projectLabel} aria-hidden="true">
-        <span>AIGC / PROJECT 01</span>
-        <span>INTERACTIVE IDENTITY</span>
+        <span>AIGC / 01</span>
+        <span>AI AVATAR DESIGN</span>
       </div>
       <p className={styles.instruction}>CLICK TO SHIFT</p>
       <p className={styles.counter} aria-label={`当前形象 ${baseIndex + 1}，共 ${portraits.length} 个形象`}>

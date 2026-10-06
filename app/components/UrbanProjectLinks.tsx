@@ -6,7 +6,7 @@ import {
 import styles from "./UrbanProjectLinks.module.css";
 
 type ProjectLinksProps = {
-  projects: ReadonlyArray<{ slug: string; title: string }>;
+  projects: ReadonlyArray<{ slug: string; title: string; titleZh?: string }>;
   section: "urban" | "aigc";
   label: string;
   updateNote?: string;
@@ -33,9 +33,14 @@ export function ProjectLinks({ projects, section, label, updateNote }: ProjectLi
               className={styles.link}
               href={`/${section}/${project.slug}`}
               prefetch={false}
-              aria-label={`查看 ${project.title} ${label}`}
+              aria-label={`查看 ${project.title}${project.titleZh ? `，${project.titleZh}` : ""} ${label}`}
             >
-              <span className={styles.title}>{project.title}</span>
+              <span className={styles.titles}>
+                <span className={styles.title} lang="en">{project.title}</span>
+                {project.titleZh && (
+                  <span className={styles.translation} lang="zh-CN">{project.titleZh}</span>
+                )}
+              </span>
               <span className={styles.arrow} aria-hidden="true">↗</span>
             </Link>
           </li>

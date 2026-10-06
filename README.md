@@ -18,6 +18,17 @@ npm start
 
 The repository is intended to be connected to Vercel. Every push to the production branch triggers a new deployment.
 
+## Project 02 media
+
+The full 4K AirPods Max film is stored in the `project-02-media-v1` GitHub release.
+`npm run build` downloads it automatically when missing and verifies its size and
+SHA-256 against `media/project-02.json`. The deployed MP4 is byte-for-byte identical
+to the approved local version, including its original audio. A mismatched local
+file stops the build instead of being overwritten.
+
+On a fresh checkout, run `npm run media:prepare` before previewing the full film
+with `npm run dev`. Other Project 02 assets are tracked directly in Git.
+
 ## Portfolio PDF
 
 The UCL final-design reader uses `public/urban/ucl-final/ucl-final-design-web.pdf`.

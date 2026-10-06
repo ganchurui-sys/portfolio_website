@@ -29,6 +29,10 @@
   height: auto;
 }
 
+.nav[data-section="aigc"] .list {
+  row-gap: clamp(24px, 4vh, 48px);
+}
+
 .updateNote {
   margin: 18px 0 0;
   color: rgb(255 255 255 / 70%);
@@ -61,12 +65,37 @@
   line-height: 1.15;
 }
 
+.titles {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .title {
   text-decoration-color: transparent;
   text-decoration-line: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 9px;
   transition: text-decoration-color 180ms ease;
+}
+
+.translation {
+  color: rgb(255 255 255 / 80%);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+
+.nav[data-section="aigc"] .link {
+  align-items: flex-start;
+}
+
+.nav[data-section="aigc"] .arrow {
+  margin-top: 0.28em;
 }
 
 .arrow {

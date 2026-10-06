@@ -7,6 +7,8 @@
   },
   "scripts": {
     "dev": "next dev",
+    "media:prepare": "node scripts/prepare-project-media.mjs",
+    "prebuild": "npm run media:prepare",
     "build": "next build",
     "start": "next start",
     "test": "npm run build",

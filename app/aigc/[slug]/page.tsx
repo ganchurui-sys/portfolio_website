@@ -7,6 +7,7 @@ import styles from "../../urban/urban.module.css";
 import { aigcProjects, getAigcProject, AIGC_RETURN_HREF } from "../projects";
 import PortraitRevealProject from "./PortraitRevealProject";
 import ProjectIntroduction from "./ProjectIntroduction";
+import ProjectOverview from "./ProjectOverview";
 import PoseGallery from "./PoseGallery";
 import CharacterTurnarounds from "./CharacterTurnarounds";
 import ExpressionStudies from "./ExpressionStudies";
@@ -67,6 +68,8 @@ export default async function AigcProjectPage({ params }: ProjectPageProps) {
           <CharacterTurnarounds />
           <ExpressionStudies />
         </>
+      ) : project.overview ? (
+        <ProjectOverview project={project} />
       ) : <article className={styles.project}>
         <header className={styles.intro}>
           <div>
