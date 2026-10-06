@@ -41,7 +41,7 @@ for (const asset of assets) {
       await pipeline(Readable.fromWeb(response.body), createWriteStream(temporary), { signal });
       await verify(temporary, asset);
       await rename(temporary, destination);
-      console.log(`Prepared original media: ${asset.path}`);
+      console.log(`Prepared project media: ${asset.path}`);
       break;
     } catch (error) {
       await rm(temporary, { force: true });

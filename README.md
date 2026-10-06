@@ -20,11 +20,13 @@ The repository is intended to be connected to Vercel. Every push to the producti
 
 ## Project 02 media
 
-The full 4K AirPods Max film is stored in the `project-02-media-v1` GitHub release.
+The web-optimized 4K AirPods Max film is stored in the `project-02-media-v2` GitHub release.
 `npm run build` downloads it automatically when missing and verifies its size and
-SHA-256 against `media/project-02.json`. The deployed MP4 is byte-for-byte identical
-to the approved local version, including its original audio. A mismatched local
-file stops the build instead of being overwritten.
+SHA-256 against `media/project-02.json`. Its 3844 × 2160 resolution, 30 fps and
+original audio are preserved while reducing the download from 216.5 MB to 131.9 MB.
+A mismatched local file stops the build instead of being overwritten. The previous
+master remains in `project-02-media-v1`; see `docs/project-02-video-optimization.md`
+for encoding settings and quality checks.
 
 On a fresh checkout, run `npm run media:prepare` before previewing the full film
 with `npm run dev`. Other Project 02 assets are tracked directly in Git.

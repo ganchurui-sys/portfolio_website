@@ -114,7 +114,7 @@ export const aigcProjects: AigcProject[] = [
       label: "AirPods Max AI 创意广告短片，默认静音循环播放",
     },
     fullFilm: {
-      src: "/aigc/project-02/airpods-max-full-film-4k-clean-v3.mp4",
+      src: "/aigc/project-02/airpods-max-full-film-4k-web-v4.mp4",
       poster: "/aigc/project-02/airpods-max-full-film-poster-clean-v3.webp",
       width: 3844,
       height: 2160,
