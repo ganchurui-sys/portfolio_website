@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="4443" viewBox="0 0 720 4443" role="img" aria-labelledby="title desc">
+<title id="title">AirPods Max AIGC 制作流程</title>
+<desc id="desc">01 创意定位：围绕降噪与沉浸式聆听，确立科技、时尚与超现实的视觉方向。产出：创意简述与视觉方向。 02 叙事开发：城市喧嚣 → 佩戴耳机 → 开启降噪泡泡悬停 → 车流悬浮 → 城市花开最终回到产品与品牌收束。产出：故事结构与情绪节奏。 03 视觉设定：同步建立产品、人物与场景的视觉参考。产出：贯穿关键帧与动态镜头的一致性基准。 04 分镜与关键帧：规划景别、构图与人物动作，明确运镜和声音节点，为每个镜头建立视觉参考。产出：故事板与镜头关键帧。 05 动态生成：以参考图约束人物、产品与场景，设计动作、运镜和超现实事件，逐镜筛选可用的生成结果。产出：可进入剪辑的动态镜头。 06 后期制作：剪辑节奏、镜头衔接与统一调色，分层处理音乐、脚步与车流声，建立城市声渐弱、音乐渐强的转折。产出：画面与声音共同完成的情绪叙事。 07 成片输出：输出 4K 完整影片与 Hero 片段，整理主视觉及制作过程，优化网页播放体积与加载体验。产出：完整影片 / Hero 片段 / 项目主视觉。人物比例、产品外形或动作连续性出现偏差时，返回关键帧修正后重新生成。</desc>
+<defs><marker id="arrow" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0 0L5 2.5L0 5" fill="#aca9b4"/></marker></defs>
+<rect width="720" height="4443" fill="#08090b"/>
+<g font-family="Arial, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif">
+<text x="40" y="56" font-size="23" fill="#aca9b4" font-weight="400" letter-spacing="1.5">ZHONGISM / AIGC</text>
+<text x="680" y="56" font-size="23" fill="#aca9b4" font-weight="400" text-anchor="end">AIRPODS MAX · 2026</text>
+<path d="M40 83L680 83" stroke="#38363e" fill="none"/>
+<text x="36" y="219" font-size="112" fill="#f0eee8" font-weight="500" letter-spacing="-7">AIGC</text>
+<text x="680" y="159" font-size="60" fill="#f0eee8" font-weight="500" text-anchor="end">设计</text>
+<text x="680" y="229" font-size="60" fill="#f0eee8" font-weight="500" text-anchor="end">流程</text>
+<text x="40" y="295" font-size="25" fill="#c5b4e5" font-weight="400" letter-spacing="2">PRODUCTION PROCESS</text>
+<text x="40" y="360" font-size="40" fill="#f0eee8" font-weight="500" >聆听改变城市感知</text>
+<text x="40" y="416" font-size="30" fill="#aca9b4" font-weight="400" >将个人聆听体验转化为超现实都市叙事。</text>
+<path d="M40 484L680 484" stroke="#38363e" fill="none"/>
+<text x="40" y="526" font-size="24" fill="#aca9b4" font-weight="400" letter-spacing="1.3">PHASE 01 / CREATIVE DIRECTION</text>
+<text x="40" y="589" font-size="40" fill="#f0eee8" font-weight="500" >先定义体验，再建立故事</text>
+<text x="40" y="699" font-size="64" fill="#c5b4e5" font-weight="400" letter-spacing="-3">01</text>
+<text x="134" y="667" font-size="36" fill="#f0eee8" font-weight="500" >创意定位</text>
+<text x="134" y="702" font-size="23" fill="#aca9b4" font-weight="400" >CREATIVE BRIEF</text>
+<path d="M40 729L680 729" stroke="#38363e" fill="none"/>
+<text x="40" y="781" font-size="30" fill="#f0eee8" font-weight="400" >围绕降噪与沉浸式聆听，</text>
+<text x="40" y="825" font-size="30" fill="#f0eee8" font-weight="400" >确立科技、时尚与超现实的</text>
+<text x="40" y="869" font-size="30" fill="#f0eee8" font-weight="400" >视觉方向。</text>
+<text x="40" y="921" font-size="26" fill="#c5b4e5" font-weight="400" >产出 / 创意简述与视觉方向</text>
+<path d="M52 954V988" fill="none" stroke="#aca9b4" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="40" y="1081" font-size="64" fill="#c5b4e5" font-weight="400" letter-spacing="-3">02</text>
+<text x="134" y="1049" font-size="36" fill="#f0eee8" font-weight="500" >叙事开发</text>
+<text x="134" y="1084" font-size="23" fill="#aca9b4" font-weight="400" >STORY DEVELOPMENT</text>
+<path d="M40 1111L680 1111" stroke="#38363e" fill="none"/>
+<text x="40" y="1163" font-size="30" fill="#f0eee8" font-weight="400" >城市喧嚣 → 佩戴耳机 → 开启降噪</text>
+<text x="40" y="1207" font-size="30" fill="#f0eee8" font-weight="400" >泡泡悬停 → 车流悬浮 → 城市花开</text>
+<text x="40" y="1251" font-size="30" fill="#f0eee8" font-weight="400" >最终回到产品与品牌收束。</text>
+<text x="40" y="1303" font-size="26" fill="#c5b4e5" font-weight="400" >产出 / 故事结构与情绪节奏</text>
+<path d="M40 1376L680 1376" stroke="#38363e" fill="none"/>
+<text x="40" y="1418" font-size="24" fill="#aca9b4" font-weight="400" letter-spacing="1.3">PHASE 02 / VISUAL DEVELOPMENT</text>
+<text x="40" y="1481" font-size="40" fill="#f0eee8" font-weight="500" >让三个视觉系统保持一致</text>
+<text x="40" y="1554" font-size="48" fill="#c5b4e5" font-weight="400" >03</text>
+<text x="120" y="1554" font-size="26" fill="#aca9b4" font-weight="400" >视觉设定 / VISUAL DEVELOPMENT</text>
+<path d="M74 1602L680 1602" stroke="#38363e" fill="none"/>
+<text x="74" y="1650" font-size="34" fill="#f0eee8" font-weight="500" >产品一致性</text>
+<text x="680" y="1650" font-size="23" fill="#c5b4e5" font-weight="400" text-anchor="end">PRODUCT</text>
+<text x="74" y="1702" font-size="30" fill="#f0eee8" font-weight="400" >淡紫配色与哑光材质</text>
+<text x="74" y="1744" font-size="30" fill="#f0eee8" font-weight="400" >统一轮廓、比例和细节</text>
+<text x="74" y="1794" font-size="26" fill="#aca9b4" font-weight="400" >产出 / 产品多视角参考</text>
+<path d="M44 1614H60" fill="none" stroke="#c5b4e5" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M74 1830L680 1830" stroke="#38363e" fill="none"/>
+<text x="74" y="1878" font-size="34" fill="#f0eee8" font-weight="500" >人物一致性</text>
+<text x="680" y="1878" font-size="23" fill="#c5b4e5" font-weight="400" text-anchor="end">CHARACTER</text>
+<text x="74" y="1930" font-size="30" fill="#f0eee8" font-weight="400" >面部、发型与身形稳定</text>
+<text x="74" y="1972" font-size="30" fill="#f0eee8" font-weight="400" >穿搭与配饰状态连续</text>
+<text x="74" y="2022" font-size="26" fill="#aca9b4" font-weight="400" >产出 / 人物原图与全身三视图</text>
+<path d="M44 1842H60" fill="none" stroke="#c5b4e5" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M74 2058L680 2058" stroke="#38363e" fill="none"/>
+<text x="74" y="2106" font-size="34" fill="#f0eee8" font-weight="500" >场景一致性</text>
+<text x="680" y="2106" font-size="23" fill="#c5b4e5" font-weight="400" text-anchor="end">SCENE</text>
+<text x="74" y="2158" font-size="30" fill="#f0eee8" font-weight="400" >基础街景延展四个视角</text>
+<text x="74" y="2200" font-size="30" fill="#f0eee8" font-weight="400" >统一建筑、光线与色彩</text>
+<text x="74" y="2250" font-size="26" fill="#aca9b4" font-weight="400" >产出 / 基础场景与衍生场景</text>
+<path d="M44 2070H60" fill="none" stroke="#c5b4e5" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M44 1614V2070" fill="none" stroke="#38363e" stroke-width="1.5" />
+<text x="40" y="2320" font-size="28" fill="#c5b4e5" font-weight="400" >一致性基准 → 贯穿关键帧与动态镜头</text>
+<path d="M40 2388L680 2388" stroke="#38363e" fill="none"/>
+<text x="40" y="2430" font-size="24" fill="#aca9b4" font-weight="400" letter-spacing="1.3">PHASE 03 / FRAME TO MOTION</text>
+<text x="40" y="2493" font-size="40" fill="#f0eee8" font-weight="500" >从静态画面到连续镜头</text>
+<text x="40" y="2603" font-size="64" fill="#c5b4e5" font-weight="400" letter-spacing="-3">04</text>
+<text x="134" y="2571" font-size="36" fill="#f0eee8" font-weight="500" >分镜与关键帧</text>
+<text x="134" y="2606" font-size="23" fill="#aca9b4" font-weight="400" >STORYBOARD &amp; KEYFRAMES</text>
+<path d="M40 2633L680 2633" stroke="#38363e" fill="none"/>
+<text x="40" y="2685" font-size="30" fill="#f0eee8" font-weight="400" >规划景别、构图与人物动作，</text>
+<text x="40" y="2729" font-size="30" fill="#f0eee8" font-weight="400" >明确运镜和声音节点，</text>
+<text x="40" y="2773" font-size="30" fill="#f0eee8" font-weight="400" >为每个镜头建立视觉参考。</text>
+<text x="40" y="2825" font-size="26" fill="#c5b4e5" font-weight="400" >产出 / 故事板与镜头关键帧</text>
+<path d="M52 2858V2892" fill="none" stroke="#aca9b4" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="40" y="2985" font-size="64" fill="#c5b4e5" font-weight="400" letter-spacing="-3">05</text>
+<text x="134" y="2953" font-size="36" fill="#f0eee8" font-weight="500" >动态生成</text>
+<text x="134" y="2988" font-size="23" fill="#aca9b4" font-weight="400" >MOTION GENERATION</text>
+<path d="M40 3015L680 3015" stroke="#38363e" fill="none"/>
+<text x="40" y="3067" font-size="30" fill="#f0eee8" font-weight="400" >以参考图约束人物、产品与场景，</text>
+<text x="40" y="3111" font-size="30" fill="#f0eee8" font-weight="400" >设计动作、运镜和超现实事件，</text>
+<text x="40" y="3155" font-size="30" fill="#f0eee8" font-weight="400" >逐镜筛选可用的生成结果。</text>
+<text x="40" y="3207" font-size="26" fill="#c5b4e5" font-weight="400" >产出 / 可进入剪辑的动态镜头</text>
+<rect x="40" y="3256" width="640" height="136" fill="none" stroke="#6e617f"/>
+<path d="M80 3316H60V3284H82" fill="none" stroke="#c5b4e5" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="102" y="3299" font-size="28" fill="#f0eee8" font-weight="400" >检查人物比例、产品外形与动作连续性</text>
+<text x="102" y="3347" font-size="28" fill="#c5b4e5" font-weight="400" >出现偏差 → 返回关键帧修正后重新生成</text>
+<path d="M40 3456L680 3456" stroke="#38363e" fill="none"/>
+<text x="40" y="3498" font-size="24" fill="#aca9b4" font-weight="400" letter-spacing="1.3">PHASE 04 / EDIT &amp; DELIVERY</text>
+<text x="40" y="3561" font-size="40" fill="#f0eee8" font-weight="500" >以剪辑与声音完成情绪</text>
+<text x="40" y="3671" font-size="64" fill="#c5b4e5" font-weight="400" letter-spacing="-3">06</text>
+<text x="134" y="3639" font-size="36" fill="#f0eee8" font-weight="500" >后期制作</text>
+<text x="134" y="3674" font-size="23" fill="#aca9b4" font-weight="400" >POST-PRODUCTION</text>
+<path d="M40 3701L680 3701" stroke="#38363e" fill="none"/>
+<text x="40" y="3753" font-size="30" fill="#f0eee8" font-weight="400" >剪辑节奏、镜头衔接与统一调色，</text>
+<text x="40" y="3797" font-size="30" fill="#f0eee8" font-weight="400" >分层处理音乐、脚步与车流声，</text>
+<text x="40" y="3841" font-size="30" fill="#f0eee8" font-weight="400" >建立城市声渐弱、音乐渐强的转折。</text>
+<text x="40" y="3893" font-size="26" fill="#c5b4e5" font-weight="400" >产出 / 画面与声音共同完成的情绪叙事</text>
+<path d="M52 3926V3960" fill="none" stroke="#aca9b4" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="40" y="4053" font-size="64" fill="#c5b4e5" font-weight="400" letter-spacing="-3">07</text>
+<text x="134" y="4021" font-size="36" fill="#f0eee8" font-weight="500" >成片输出</text>
+<text x="134" y="4056" font-size="23" fill="#aca9b4" font-weight="400" >FINAL DELIVERY</text>
+<path d="M40 4083L680 4083" stroke="#38363e" fill="none"/>
+<text x="40" y="4135" font-size="30" fill="#f0eee8" font-weight="400" >输出 4K 完整影片与 Hero 片段，</text>
+<text x="40" y="4179" font-size="30" fill="#f0eee8" font-weight="400" >整理主视觉及制作过程，</text>
+<text x="40" y="4223" font-size="30" fill="#f0eee8" font-weight="400" >优化网页播放体积与加载体验。</text>
+<text x="40" y="4275" font-size="26" fill="#c5b4e5" font-weight="400" >产出 / 完整影片 / Hero 片段 / 项目主视觉</text>
+<path d="M40 4351L680 4351" stroke="#38363e" fill="none"/>
+<text x="40" y="4400" font-size="23" fill="#aca9b4" font-weight="400" >AIRPODS MAX / AIGC CREATIVE FILM</text>
+</g>
+</svg>

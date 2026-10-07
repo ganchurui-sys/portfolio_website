@@ -1,0 +1,61 @@
+{
+  "title": "聆听改变城市感知",
+  "description": "将个人聆听体验转化为超现实都市叙事。",
+  "steps": [
+    {
+      "number": "01",
+      "title": "创意定位",
+      "english": "CREATIVE BRIEF",
+      "lines": ["围绕降噪与沉浸式聆听，", "确立科技、时尚与超现实的", "视觉方向。"],
+      "output": "创意简述与视觉方向"
+    },
+    {
+      "number": "02",
+      "title": "叙事开发",
+      "english": "STORY DEVELOPMENT",
+      "lines": ["城市喧嚣 → 佩戴耳机 → 开启降噪", "泡泡悬停 → 车流悬浮 → 城市花开", "最终回到产品与品牌收束。"],
+      "output": "故事结构与情绪节奏"
+    },
+    {
+      "number": "03",
+      "title": "视觉设定",
+      "english": "VISUAL DEVELOPMENT",
+      "lines": ["同步建立产品、人物与场景的视觉参考。"],
+      "output": "贯穿关键帧与动态镜头的一致性基准",
+      "branches": [
+        { "title": "产品一致性", "english": "PRODUCT", "lines": ["淡紫配色与哑光材质", "统一轮廓、比例和细节"], "output": "产品多视角参考" },
+        { "title": "人物一致性", "english": "CHARACTER", "lines": ["面部、发型与身形稳定", "穿搭与配饰状态连续"], "output": "人物原图与全身三视图" },
+        { "title": "场景一致性", "english": "SCENE", "lines": ["基础街景延展四个视角", "统一建筑、光线与色彩"], "output": "基础场景与衍生场景" }
+      ]
+    },
+    {
+      "number": "04",
+      "title": "分镜与关键帧",
+      "english": "STORYBOARD & KEYFRAMES",
+      "lines": ["规划景别、构图与人物动作，", "明确运镜和声音节点，", "为每个镜头建立视觉参考。"],
+      "output": "故事板与镜头关键帧"
+    },
+    {
+      "number": "05",
+      "title": "动态生成",
+      "english": "MOTION GENERATION",
+      "lines": ["以参考图约束人物、产品与场景，", "设计动作、运镜和超现实事件，", "逐镜筛选可用的生成结果。"],
+      "output": "可进入剪辑的动态镜头"
+    },
+    {
+      "number": "06",
+      "title": "后期制作",
+      "english": "POST-PRODUCTION",
+      "lines": ["剪辑节奏、镜头衔接与统一调色，", "分层处理音乐、脚步与车流声，", "建立城市声渐弱、音乐渐强的转折。"],
+      "output": "画面与声音共同完成的情绪叙事"
+    },
+    {
+      "number": "07",
+      "title": "成片输出",
+      "english": "FINAL DELIVERY",
+      "lines": ["输出 4K 完整影片与 Hero 片段，", "整理主视觉及制作过程，", "优化网页播放体积与加载体验。"],
+      "output": "完整影片 / Hero 片段 / 项目主视觉"
+    }
+  ],
+  "iteration": "人物比例、产品外形或动作连续性出现偏差时，返回关键帧修正后重新生成。"
+}

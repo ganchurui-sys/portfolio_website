@@ -3,6 +3,7 @@ import type { AigcProject } from "../projects";
 import CharacterConsistency from "./CharacterConsistency";
 import SceneConsistency from "./SceneConsistency";
 import Storyboard from "./Storyboard";
+import ProductionProcess from "./ProductionProcess";
 import Workflow from "./Workflow";
 import introductionStyles from "./project-introduction.module.css";
 import styles from "./project-overview.module.css";
@@ -164,6 +165,9 @@ export default function ProjectOverview({ project }: { project: AigcProject }) {
             </video>
           </figure>
         </section>
+      )}
+      {project.productionProcess && (
+        <ProductionProcess projectSlug={project.slug} content={project.productionProcess} />
       )}
       {project.workflow && (
         <Workflow projectSlug={project.slug} content={project.workflow} />
