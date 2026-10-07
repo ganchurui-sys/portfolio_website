@@ -1,6 +1,6 @@
 .section {
   min-width: 0;
-  padding: clamp(24px, 3vw, 48px) 20px clamp(48px, 6vw, 96px);
+  padding: clamp(24px, 3vw, 48px) 20px 48px;
   background: #fff;
   color: #161616;
   font-family: var(--font-body);
@@ -11,12 +11,13 @@
   position: relative;
   min-width: 0;
   margin: 24px 0 0;
-  background: #08090b;
+  background: #fff;
 }
 
 .image {
   display: block;
   width: 100%;
+  max-width: 100%;
   height: auto;
 }
 

@@ -18,24 +18,16 @@ export default function ProductionProcess({ projectSlug, content }: ProductionPr
         <span className={overviewStyles.headingTranslation} lang="zh-CN">制作流程图</span>
       </h2>
       <figure className={styles.figure}>
-        <picture>
-          <source
-            media="(max-width: 640px)"
-            srcSet={content.mobileImage.src}
-            width={content.mobileImage.width}
-            height={content.mobileImage.height}
-          />
-          <Image
-            className={styles.image}
-            src={content.image.src}
-            alt={content.image.alt}
-            width={content.image.width}
-            height={content.image.height}
-            loading="lazy"
-            unoptimized
-            draggable={false}
-          />
-        </picture>
+        <Image
+          className={styles.image}
+          src={content.image.src}
+          alt={content.image.alt}
+          width={content.image.width}
+          height={content.image.height}
+          loading="lazy"
+          unoptimized
+          draggable={false}
+        />
         <figcaption className={styles.transcript} lang="zh-CN">
           <ol>
             {content.steps.map((step) => (

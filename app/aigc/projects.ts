@@ -42,7 +42,6 @@ export type AigcProject = {
   fullFilm?: AigcVideo & { duration: string };
   productionProcess?: {
     image: AigcContentSection["image"];
-    mobileImage: AigcContentSection["image"];
     steps: typeof project02Process.steps;
     iteration: string;
   };
@@ -131,16 +130,10 @@ export const aigcProjects: AigcProject[] = [
     },
     productionProcess: {
       image: {
-        src: "/aigc/project-02/airpods-max-production-process-v1.svg",
-        alt: "AirPods Max AIGC 制作流程图：创意定位、叙事开发、视觉设定、分镜与关键帧、动态生成、后期制作、成片输出。产品、人物、场景三条一致性线索贯穿制作。",
-        width: 1280,
-        height: 2968,
-      },
-      mobileImage: {
-        src: "/aigc/project-02/airpods-max-production-process-mobile-v1.svg",
-        alt: "AirPods Max AIGC 制作流程图，手机竖版",
-        width: 720,
-        height: 4443,
+        src: "/aigc/project-02/airpods-max-production-process-horizontal-v2.svg",
+        alt: "AirPods Max AIGC 横向制作流程图，从左到右依次为创意定位、叙事开发、视觉设定、分镜与关键帧、动态生成、后期制作、成片输出。产品、人物、场景三条一致性线索贯穿制作。",
+        width: 3360,
+        height: 960,
       },
       steps: project02Process.steps,
       iteration: project02Process.iteration,
