@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { AigcProject } from "../projects";
 import CharacterConsistency from "./CharacterConsistency";
 import SceneConsistency from "./SceneConsistency";
+import StoryboardOverview from "./StoryboardOverview";
 import Storyboard from "./Storyboard";
 import ProductionProcess from "./ProductionProcess";
 import Workflow from "./Workflow";
@@ -129,6 +130,10 @@ export default function ProjectOverview({ project }: { project: AigcProject }) {
 
       {project.sceneConsistency && (
         <SceneConsistency projectSlug={project.slug} content={project.sceneConsistency} />
+      )}
+
+      {project.storyboardOverview && (
+        <StoryboardOverview projectSlug={project.slug} content={project.storyboardOverview} />
       )}
 
       {project.storyboard && (

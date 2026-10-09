@@ -66,6 +66,7 @@ export type AigcProject = {
     base: AigcContentSection["image"];
     images: AigcContentSection["image"][];
   };
+  storyboardOverview?: AigcContentSection;
   storyboard?: {
     shots: {
       id: string;
@@ -240,6 +241,16 @@ export const aigcProjects: AigcProject[] = [
           height: 1440,
         },
       ],
+    },
+    storyboardOverview: {
+      description: "24 key frames drawn from the final film trace the shift from city noise to a personal world of music.",
+      translation: "基于最终成片整理的 24 格关键分镜，呈现从城市噪声到个人音乐世界的叙事变化。",
+      image: {
+        src: "/aigc/project-02/storyboard/airpods-max-storyboard-overview-v1.png",
+        alt: "AirPods Max 创意广告的 24 格黑白手绘分镜总览，包含镜号、时间点、景别与动作注释，依次呈现城市噪声、戴上耳机、泡泡互动、街头舞步、悬浮车流、建筑开花及品牌片尾。",
+        width: 1536,
+        height: 1024,
+      },
     },
     storyboard: {
       shots: [
