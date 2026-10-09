@@ -52,7 +52,10 @@ export default function ProjectOverview({ project }: { project: AigcProject }) {
         )}
       </section>
 
-      <section aria-label="项目主视觉">
+      <section
+        className={project.imageLayout === "fit-screen" ? styles.pageGallery : undefined}
+        aria-label="项目主视觉"
+      >
         {project.video && (
           <figure className={styles.hero}>
             <video

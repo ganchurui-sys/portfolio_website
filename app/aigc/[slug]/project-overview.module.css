@@ -46,6 +46,18 @@
   background: #000;
 }
 
+.pageGallery .hero {
+  padding-block: clamp(12px, 2svh, 24px);
+}
+
+.pageGallery .heroImage {
+  width: auto;
+  max-width: 100%;
+  max-height: 82svh;
+  margin-inline: auto;
+  object-fit: contain;
+}
+
 .hero figcaption {
   margin: 14px 0;
   color: #4a4a4a;

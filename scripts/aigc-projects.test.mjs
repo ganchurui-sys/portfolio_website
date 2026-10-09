@@ -3,10 +3,11 @@ import test from "node:test";
 import { aigcProjects, getAigcProject, AIGC_RETURN_HREF } from "../app/aigc/projects.ts";
 import { urbanProjects, urbanProjectRevealDelay } from "../app/urban/projects.ts";
 
-test("the AIGC index includes avatar design and creative TVC", () => {
+test("the AIGC index includes avatar design, creative TVC and operation design", () => {
   assert.deepEqual(aigcProjects.map(({ slug, title }) => ({ slug, title })), [
     { slug: "project-01", title: "01 AI AVATAR DESIGN" },
     { slug: "project-02", title: "02 AI CREATIVE TVC" },
+    { slug: "project-03", title: "03 OPERATION DESIGN" },
   ]);
   for (const project of aigcProjects) {
     assert.equal(getAigcProject(project.slug), project);
@@ -15,7 +16,7 @@ test("the AIGC index includes avatar design and creative TVC", () => {
 });
 
 test("removed placeholder projects no longer resolve", () => {
-  for (const slug of ["project-03", "project-04", "project-05"]) {
+  for (const slug of ["project-04", "project-05"]) {
     assert.equal(getAigcProject(slug), undefined);
   }
 });
@@ -24,6 +25,7 @@ test("project titles retain their staggered entrance timing", () => {
   assert.deepEqual(aigcProjects.map((_, index) => urbanProjectRevealDelay(index)), [
     120,
     340,
+    560,
   ]);
 });
 
