@@ -1,4 +1,4 @@
-import Link from "next/link";
+import NavigationLink from "./NavigationLink";
 import {
   urbanProjectRevealDelay,
   urbanProjects,
@@ -29,10 +29,9 @@ export function ProjectLinks({ projects, section, label, updateNote }: ProjectLi
             className={styles.item}
             style={{ animationDelay: `${urbanProjectRevealDelay(index)}ms` }}
           >
-            <Link
+            <NavigationLink
               className={styles.link}
               href={`/${section}/${project.slug}`}
-              prefetch={false}
               aria-label={`查看 ${project.title}${project.titleZh ? `，${project.titleZh}` : ""} ${label}`}
             >
               <span className={styles.titles}>
@@ -42,7 +41,7 @@ export function ProjectLinks({ projects, section, label, updateNote }: ProjectLi
                 )}
               </span>
               <span className={styles.arrow} aria-hidden="true">↗</span>
-            </Link>
+            </NavigationLink>
           </li>
         ))}
       </ol>

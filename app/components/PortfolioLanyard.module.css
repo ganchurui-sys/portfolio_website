@@ -19,6 +19,57 @@
   overflow: visible;
 }
 
+.scene {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene[data-ready="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.fallbackStrap {
+  position: absolute;
+  top: 0;
+  bottom: 72%;
+  left: calc(50% - 4px);
+  width: 8px;
+  background: #101010 url("/zhong-lanyard.png") center / 100% auto repeat-y;
+}
+
+.fallbackCard {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  width: 27svh;
+  aspect-ratio: 788 / 1120;
+  border-radius: 1.5svh;
+  background: #f8f8f6 url("/zhong-card-texture-v9.webp") 2.697% 5.442% / 212.944% 135.68%;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 25%);
+  transform: translateX(-50%);
+}
+
+.fallbackCard span {
+  position: absolute;
+  top: 72.3%;
+  left: 6%;
+  width: 89%;
+  padding: 0.15svh 0;
+  background: #f8f8f6;
+  color: #0e0f10;
+  font: 700 0.8svh/1.2 Arial, sans-serif;
+  white-space: nowrap;
+}
+
 .entryHint {
   position: absolute;
   top: 73%;

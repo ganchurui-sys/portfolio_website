@@ -1,4 +1,5 @@
-import Image from "next/image";
+import Image from "../../components/ProjectImage";
+import { projectImageSource } from "../../project-media";
 import type { AigcProject } from "../projects";
 import CharacterConsistency from "./CharacterConsistency";
 import SceneConsistency from "./SceneConsistency";
@@ -69,7 +70,7 @@ export default function ProjectOverview({ project }: { project: AigcProject }) {
               muted
               playsInline
               preload="auto"
-              poster={project.video.poster}
+              poster={projectImageSource(project.video.poster)}
               width={project.video.width}
               height={project.video.height}
               aria-label={project.video.label}

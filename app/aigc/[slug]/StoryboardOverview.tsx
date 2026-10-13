@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "../../components/ProjectImage";
 import type { AigcProject } from "../projects";
 import overviewStyles from "./project-overview.module.css";
 import styles from "./storyboard-overview.module.css";

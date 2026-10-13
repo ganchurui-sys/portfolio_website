@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "../../components/ProjectImage";
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import styles from "./pose-gallery.module.css";

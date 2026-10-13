@@ -1,15 +1,16 @@
 "use client";
 
 import NextImage from "next/image";
-import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import UrbanProjectLinks, { ProjectLinks } from "./components/UrbanProjectLinks";
 import { aigcProjects } from "./aigc/projects";
-import { prepareVideoStart, selectHomeVideoAssets, type VideoAssetUrls } from "./home-media";
-
-const PortfolioLanyard = dynamic(() => import("./components/PortfolioLanyard"), { ssr: false });
+import PortfolioBadge, { preloadPortfolioBadge } from "./components/PortfolioBadge";
+import { isVideoRangeBuffered, loadHomeVideo, waitForVideoFrame, selectHomeVideoAssets, type VideoAssetUrls } from "./home-media";
+import { preloadProjectImages } from "./project-media";
 
 type CoverState = "visible" | "loading" | "leaving" | "hidden";
+type StageNavigation = { scene: number; immediate: boolean };
 
 const VIDEO_START_TIME = 1.5;
 const VIDEO_END_TIME = 14.5;
@@ -19,8 +20,9 @@ const NAVIGATION_TIME_OFFSET = 0.04;
 const SCENE_TRANSITION_DURATION = 900;
 const MAX_SCENE_TRANSITION_DURATION = 2300;
 const MAX_TRANSITION_PLAYBACK_RATE = 4.5;
-const VIDEO_POSTER_PATH = "/home-background-retro-desk-original-4k-poster.jpg";
-const VIDEO_END_FRAME_PATH = "/home-background-retro-desk-original-4k-end.jpg";
+const CHAPTER_CLICK_DURATION = 600;
+const VIDEO_POSTER_PATH = "/home-media-v2/poster.webp";
+const VIDEO_END_FRAME_PATH = "/home-media-v2/end.webp";
 
 const getHomeVideoAssets = () => {
   const connection = (navigator as Navigator & {
@@ -541,11 +543,15 @@ function InteractiveWorkBadge({ active }: InteractiveWorkBadgeProps) {
 */
 
 export default function Home() {
-  const [coverState, setCoverState] = useState<CoverState>("visible");
+  const router = useRouter();
+  const [coverState, setCoverState] = useState<CoverState>("loading");
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const [loadingError, setLoadingError] = useState(false);
+  const [assetsPrepared, setAssetsPrepared] = useState(false);
+  const [badgePrepared, setBadgePrepared] = useState(false);
+  const handleBadgePrepared = useCallback(() => setBadgePrepared(true), []);
   const [activeScene, setActiveScene] = useState(0);
   const [aboutBadgeTrigger, setAboutBadgeTrigger] = useState<number | null>(null);
-  const aboutBadgePendingRef = useRef(false);
-  const aboutBadgeShownRef = useRef(false);
   const [videoAssetUrls, setVideoAssetUrls] = useState<VideoAssetUrls | null>(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const bulletSectionRef = useRef<HTMLElement>(null);
@@ -554,23 +560,29 @@ export default function Home() {
   const requestedSceneRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      const sceneParam = new URLSearchParams(window.location.search).get("scene");
-      if (sceneParam === null) return;
-
-      const requestedScene = Number(sceneParam);
-      if (
-        !Number.isInteger(requestedScene) ||
-        requestedScene < 0 ||
-        requestedScene >= SCENE_COUNT
-      ) return;
-
-      requestedSceneRef.current = requestedScene;
-      setVideoAssetUrls(getHomeVideoAssets());
-      setCoverState("hidden");
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
+    let disposed = false;
+    const sceneParam = new URLSearchParams(window.location.search).get("scene");
+    const scene = sceneParam === null ? NaN : Number(sceneParam);
+    if (Number.isInteger(scene) && scene >= 0 && scene < SCENE_COUNT) requestedSceneRef.current = scene;
+    for (const href of ["/about", "/urban/project-01", "/urban/project-02", "/urban/project-03", "/aigc/project-01", "/aigc/project-02", "/aigc/project-03"]) {
+      router.prefetch(href);
+    }
+    let videoProgress = 0;
+    let imageProgress = 0;
+    const report = () => {
+      if (!disposed) setLoadingProgress(Math.round(videoProgress * 85 + imageProgress * 10));
+    };
+    Promise.all([
+      loadHomeVideo(getHomeVideoAssets().master, value => { videoProgress = value; report(); }),
+      preloadProjectImages(value => { imageProgress = value; report(); }),
+      preloadPortfolioBadge(),
+    ]).then(([url]) => {
+      if (disposed) return;
+      setVideoAssetUrls({ master: url, scrub: url });
+      setAssetsPrepared(true);
+    }).catch(() => { if (!disposed) setLoadingError(true); });
+    return () => { disposed = true; };
+  }, [loadAttempt, router]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -587,17 +599,19 @@ export default function Home() {
 
   useEffect(() => {
     const video = bulletVideoRef.current;
-    if (coverState !== "loading" || !videoAssetUrls || !video) return;
-
-    return prepareVideoStart(video, {
-      startTime: VIDEO_START_TIME,
-      onProgress: setLoadingProgress,
-      onReady: () => {
-        setLoadingProgress(100);
-        setCoverState("leaving");
-      },
-    });
-  }, [coverState, videoAssetUrls]);
+    const scrub = bulletScrubVideoRef.current;
+    if (!assetsPrepared || !badgePrepared || !videoAssetUrls || !video || !scrub) return;
+    const controller = new AbortController();
+    Promise.all([
+      waitForVideoFrame(video, VIDEO_START_TIME, controller.signal),
+      waitForVideoFrame(scrub, VIDEO_START_TIME, controller.signal),
+    ]).then(() => {
+      if (controller.signal.aborted) return;
+      setLoadingProgress(100);
+      setCoverState(requestedSceneRef.current === null ? "visible" : "hidden");
+    }).catch(() => { if (!controller.signal.aborted) setLoadingError(true); });
+    return () => controller.abort();
+  }, [assetsPrepared, badgePrepared, videoAssetUrls]);
 
   // Keep entry functional even when the browser suppresses transition events.
   useEffect(() => {
@@ -608,20 +622,16 @@ export default function Home() {
 
   const enterPortfolio = () => {
     if (coverState !== "visible") return;
-    setVideoAssetUrls(getHomeVideoAssets());
-    setLoadingProgress(0);
-    setCoverState("loading");
+    setCoverState("leaving");
   };
 
-  const scrollToScene = useCallback((scene: number) => {
+  const scrollToScene = useCallback((scene: number, immediate = false) => {
     const boundedScene = Math.min(Math.max(scene, 0), SCENE_COUNT - 1);
     if (boundedScene !== 1) {
-      aboutBadgePendingRef.current = false;
-      aboutBadgeShownRef.current = false;
       setAboutBadgeTrigger(null);
     }
-    window.dispatchEvent(new CustomEvent<number>("portfolio-stage-navigation", {
-      detail: boundedScene,
+    window.dispatchEvent(new CustomEvent<StageNavigation>("portfolio-stage-navigation", {
+      detail: { scene: boundedScene, immediate },
     }));
   }, []);
 
@@ -737,13 +747,6 @@ export default function Home() {
 
       if (nextScene !== currentScene) {
         currentScene = nextScene;
-        if (nextScene === 1 && aboutBadgePendingRef.current) {
-          aboutBadgeShownRef.current = true;
-        } else if (nextScene !== 1 && aboutBadgeShownRef.current) {
-          aboutBadgePendingRef.current = false;
-          aboutBadgeShownRef.current = false;
-          setAboutBadgeTrigger(null);
-        }
         setActiveScene(nextScene);
       }
     };
@@ -755,7 +758,7 @@ export default function Home() {
     };
 
     const renderSeek = () => {
-      if (autoplayMode || reducedMotion || stagePlaybackActive || scrubVideo.readyState < 1) {
+      if (autoplayMode || reducedMotion || stagePlaybackActive || scrubVideo.readyState < 1 || scrubVideo.seeking) {
         seekFrame = 0;
         return;
       }
@@ -776,7 +779,7 @@ export default function Home() {
     const handleScrubSeeked = () => {
       if (scrubVideo.readyState >= 2) {
         scrubHasFrame = true;
-        updateVisuals(getScrollProgress());
+        if (!autoplayMode && !stageNavigationFrame) updateVisuals(getScrollProgress());
       }
       if (
         !autoplayMode &&
@@ -865,6 +868,7 @@ export default function Home() {
     };
 
     const switchToManualControl = () => {
+      if (manualControl) return;
       manualControl = true;
       manualShowingMaster = false;
       stagePlaybackActive = false;
@@ -901,7 +905,7 @@ export default function Home() {
       documentRoot.style.scrollBehavior = previousScrollBehavior;
     };
 
-    const navigateToStage = (scene: number) => {
+    const navigateToStage = (scene: number, direct = false, immediate = false) => {
       const boundedScene = Math.min(Math.max(scene, 0), SCENE_COUNT - 1);
       const sceneTime = Math.min(
         SCENE_START_TIMES[boundedScene] + (boundedScene === 0 ? 0 : NAVIGATION_TIME_OFFSET),
@@ -917,19 +921,25 @@ export default function Home() {
 
       switchToManualControl();
       cancelStageNavigation();
+      // Assigning scrollTop still animates when CSS sets scroll-behavior:smooth.
+      // Keep the scroll position in sync with the scene, including direct returns.
+      documentRoot.style.scrollBehavior = "auto";
 
-      if (Math.abs(targetScrollTop - startScrollTop) < 1 || reducedMotion) {
+      if (Math.abs(targetScrollTop - startScrollTop) < 1 || reducedMotion || immediate) {
         documentRoot.scrollTop = targetScrollTop;
         targetTime = sceneTime;
         if (scrubVideo.readyState >= 1) scrubVideo.currentTime = sceneTime;
         updateVisuals(targetProgress);
         scheduleMasterSwap(40);
+        window.requestAnimationFrame(() => {
+          documentRoot.style.scrollBehavior = previousScrollBehavior;
+        });
         return;
       }
 
       const startedAt = performance.now();
       const timeDistance = Math.abs(sceneTime - startTime);
-      const transitionDuration = Math.min(
+      const transitionDuration = direct ? CHAPTER_CLICK_DURATION : Math.min(
         MAX_SCENE_TRANSITION_DURATION,
         Math.max(
           SCENE_TRANSITION_DURATION,
@@ -942,15 +952,15 @@ export default function Home() {
       targetTime = startTime;
       updateVisuals(startProgress);
 
-      // HAVE_METADATA is enough here: play() will wait for the seeked frame.
-      // Requiring HAVE_CURRENT_DATA made a fresh seek fall back to stepped images.
-      if (movingForward && scrubVideo.readyState >= 1) {
+      // A streaming video may not have the destination yet. Never let a pending
+      // play() dictate navigation; seek to the latest available target instead.
+      if (movingForward && scrubVideo.readyState >= 1 && isVideoRangeBuffered(scrubVideo, startTime, sceneTime)) {
         stagePlaybackActive = true;
         scrubVideo.currentTime = startTime;
         scrubVideo.playbackRate = clamp(
           timeDistance / (transitionDuration / 1000),
           0.25,
-          MAX_TRANSITION_PLAYBACK_RATE,
+          direct ? 16 : MAX_TRANSITION_PLAYBACK_RATE,
         );
         void scrubVideo.play().catch(() => {
           stagePlaybackActive = false;
@@ -965,7 +975,7 @@ export default function Home() {
 
         documentRoot.scrollTop = startScrollTop + (targetScrollTop - startScrollTop) * elapsed;
         targetTime = frameTime;
-        if (!stagePlaybackActive && scrubVideo.readyState >= 1 && Math.abs(scrubVideo.currentTime - frameTime) >= 0.012) {
+        if (!stagePlaybackActive && scrubVideo.readyState >= 1 && !scrubVideo.seeking && Math.abs(scrubVideo.currentTime - frameTime) >= 0.012) {
           scrubVideo.currentTime = frameTime;
         }
         updateVisuals(frameProgress);
@@ -995,8 +1005,8 @@ export default function Home() {
     };
 
     const handleStageNavigation = (event: Event) => {
-      const scene = (event as CustomEvent<number>).detail;
-      if (Number.isFinite(scene)) navigateToStage(scene);
+      const { scene, immediate } = (event as CustomEvent<StageNavigation>).detail;
+      if (Number.isFinite(scene)) navigateToStage(scene, true, immediate);
     };
 
     const releaseWheelAfterQuiet = () => {
@@ -1050,8 +1060,6 @@ export default function Home() {
       }
       wheelGestureLocked = true;
       releaseWheelAfterQuiet();
-      aboutBadgePendingRef.current = false;
-      aboutBadgeShownRef.current = false;
       setAboutBadgeTrigger(null);
       const progress = getScrollProgress();
       const fallbackScene = getSceneIndexForTime(VIDEO_START_TIME + progress * range);
@@ -1066,8 +1074,6 @@ export default function Home() {
 
       event.preventDefault();
       if (stageNavigationFrame) return;
-      aboutBadgePendingRef.current = false;
-      aboutBadgeShownRef.current = false;
       setAboutBadgeTrigger(null);
       if (event.key === "Home") navigateToStage(0);
       else if (event.key === "End") navigateToStage(SCENE_COUNT - 1);
@@ -1100,8 +1106,6 @@ export default function Home() {
       const distance = touchStartY - endY;
       touchStartY = null;
       if (Math.abs(distance) >= 36) {
-        aboutBadgePendingRef.current = false;
-        aboutBadgeShownRef.current = false;
         setAboutBadgeTrigger(null);
         navigateToStage(currentScene + (distance > 0 ? 1 : -1));
       }
@@ -1201,12 +1205,10 @@ export default function Home() {
         requestedSceneRef.current = null;
 
         if (requestedScene === 1) {
-          aboutBadgePendingRef.current = true;
-          aboutBadgeShownRef.current = false;
           setAboutBadgeTrigger((trigger) => (trigger ?? 0) + 1);
         }
 
-        scrollToScene(requestedScene);
+        scrollToScene(requestedScene, true);
 
         const url = new URL(window.location.href);
         url.searchParams.delete("scene");
@@ -1230,7 +1232,7 @@ export default function Home() {
     <>
       {coverState !== "hidden" && (
         <section
-          className={`entry-cover ${coverState !== "visible" ? "entry-cover--loading" : ""} ${coverState === "leaving" ? "entry-cover--leaving" : ""}`}
+          className={`entry-cover ${coverState === "loading" ? "entry-cover--loading" : ""} ${coverState === "leaving" ? "entry-cover--leaving" : ""}`}
           aria-label="作品集封面"
           onTransitionEnd={(event) => {
             if (event.target === event.currentTarget && event.propertyName === "transform" && coverState === "leaving") {
@@ -1238,13 +1240,14 @@ export default function Home() {
             }
           }}
         >
-          {coverState === "visible" ? (
+          <LiquidRefractionBackground />
+          {coverState !== "loading" ? (
             <>
-              <LiquidRefractionBackground />
               <button
                 className="enter-button"
                 type="button"
                 onClick={enterPortfolio}
+                disabled={coverState !== "visible"}
                 aria-label="进入作品集"
               />
             </>
@@ -1257,7 +1260,11 @@ export default function Home() {
               <div className="portfolio-loader__track" aria-hidden="true">
                 <i style={{ transform: `scaleX(${loadingProgress / 100})` }} />
               </div>
-              <p>YOUR PORTFOLIO IS OPENING</p>
+              <p>{loadingError ? "加载未完成，请检查网络后重试。" : "PREPARING ANIMATION & PROJECT PREVIEWS"}</p>
+              {loadingError && <button className="portfolio-loader__retry" type="button" onClick={() => {
+                setLoadingError(false);
+                setLoadAttempt(attempt => attempt + 1);
+              }}>重新加载 / RETRY</button>}
             </div>
           )}
         </section>
@@ -1278,6 +1285,7 @@ export default function Home() {
             <NextImage
               className="bullet-last-frame"
               src={VIDEO_END_FRAME_PATH}
+              unoptimized
               alt=""
               fill
               priority
@@ -1298,7 +1306,7 @@ export default function Home() {
             <video
               ref={bulletScrubVideoRef}
               className="bullet-scrub-video"
-              src={coverState === "leaving" || coverState === "hidden" ? videoAssetUrls?.scrub : undefined}
+              src={videoAssetUrls?.scrub}
               muted
               playsInline
               preload="auto"
@@ -1306,8 +1314,8 @@ export default function Home() {
               aria-hidden="true"
             />
             <div className="bullet-shade" aria-hidden="true" />
-            {activeScene === 1 && aboutBadgeTrigger !== null && (
-              <PortfolioLanyard key={aboutBadgeTrigger} />
+            {(coverState === "loading" || (activeScene === 1 && aboutBadgeTrigger !== null)) && (
+              <PortfolioBadge key={coverState === "loading" ? `prepare-${loadAttempt}` : aboutBadgeTrigger} onPrepared={handleBadgePrepared} />
             )}
             {coverState === "hidden" && activeScene === 2 && <UrbanProjectLinks />}
             {coverState === "hidden" && activeScene === 3 && (
@@ -1326,8 +1334,6 @@ export default function Home() {
                   type="button"
                   aria-current={activeScene === 1 ? "page" : undefined}
                   onClick={() => {
-                    aboutBadgePendingRef.current = true;
-                    aboutBadgeShownRef.current = false;
                     setAboutBadgeTrigger((trigger) => (trigger ?? 0) + 1);
                     scrollToScene(1);
                   }}

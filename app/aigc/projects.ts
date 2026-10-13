@@ -116,7 +116,7 @@ export const aigcProjects: AigcProject[] = [
       ],
     },
     video: {
-      src: "/aigc/project-02/airpods-max-hero-clean.mp4",
+      src: "/project-media-v1/aigc/project-02/hero.mp4",
       poster: "/aigc/project-02/airpods-max-hero-clean.jpg",
       width: 1920,
       height: 1080,

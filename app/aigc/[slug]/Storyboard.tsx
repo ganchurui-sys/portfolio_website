@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "../../components/ProjectImage";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { AigcProject } from "../projects";

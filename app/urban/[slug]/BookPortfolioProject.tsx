@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import Link from "../../components/NavigationLink";
+import Image from "../../components/ProjectImage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import navigationStyles from "../../about/about.module.css";
 import type { UrbanProject } from "../projects";
@@ -213,7 +214,7 @@ export default function BookPortfolioProject({ title, book }: BookPortfolioProje
             <div ref={flipbookElement} className={styles.flipbookHost} />
             {status !== "ready" && (
               <div className={styles.readerStatus} role="status">
-                <span aria-hidden="true" />
+                <Image className={styles.preview} src={book.preview} alt={`${title} 首屏预览`} fill sizes="(max-width: 760px) 100vw, 75vw" priority />
                 <p>{status === "loading" ? "LOADING PORTFOLIO" : "PORTFOLIO COULD NOT BE LOADED"}</p>
               </div>
             )}

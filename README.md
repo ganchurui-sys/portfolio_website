@@ -20,22 +20,23 @@ The repository is intended to be connected to Vercel. Every push to the producti
 
 ## Homepage loading
 
-The homepage streams versioned H.264 files from `public/home-media-v1/` using
-native video requests. It opens after the first second at the intro position has
-buffered, rather than downloading the entire playback and scrolling videos into
-JavaScript Blobs. The scrolling video starts loading as the cover leaves. Slow
-or failed media falls back to the existing poster after at most six seconds of
-waiting, with navigation still available.
+The opening progress bar prepares one complete, shared video before enabling
+entry. Desktop uses a 6.35 MB 1080p file; mobile and constrained connections use
+a 3.19 MB 720p file. Both playback and scrubbing use the same session-cached Blob
+URL, so jumping chapters does not wait for a later network segment. Both video
+elements decode their opening frame before the entrance becomes available.
 
-Desktop media totals 27.45 MB; mobile media totals 11.35 MB, down from 197.74 MB.
-Screens up to 760 px, data-saving mode, and reported 2G/3G connections use the
-smaller pair. The 3D badge code and assets load when its section is opened.
+The loader also prepares the badge and project first-screen images. Project
+routes are prefetched; the remaining images load near the viewport. 52 prepared
+WebP images total 7.07 MB instead of 155.83 MB of source images. Original artwork
+and full-resolution image links remain available. PDF readers show a prepared
+first-page preview while the document and interactive reader initialize.
 
-The generated videos are committed assets. To recreate missing variants locally
-from the preserved 4K master, run `node scripts/prepare-home-media.mjs` with ffmpeg
-installed. Deployments do not need ffmpeg. Run
-`node --test scripts/home-media.test.mjs` for startup and fallback regression tests.
-See `docs/home-loading-optimization.md` for encoding and verification details.
+Generated assets are checked in. Offline preparation uses ffmpeg and sharp:
+`node scripts/prepare-home-media.mjs`, `node scripts/prepare-project-images.mjs`,
+and `node scripts/prepare-badge-model.mjs`. Deployments do not need these tools.
+Run `node --test scripts/home-media.test.mjs` for readiness, caching, and retry
+regressions. See `docs/home-loading-optimization.md` for details.
 
 Geist and Geist Mono use the same Latin font files as the previous deployed site,
 now stored in `app/fonts/` with their OFL license. Builds no longer need access to

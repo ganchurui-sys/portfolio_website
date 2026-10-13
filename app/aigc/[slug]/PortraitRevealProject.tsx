@@ -1,6 +1,7 @@
 "use client";
 
-import Image from "next/image";
+import Image from "../../components/ProjectImage";
+import { projectImageSource } from "../../project-media";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./portrait-reveal.module.css";
 
@@ -289,7 +290,7 @@ export default function PortraitRevealProject() {
 
     const setup = async () => {
       try {
-        const images = await Promise.all(portraits.map((portrait) => loadImage(portrait.src)));
+        const images = await Promise.all(portraits.map((portrait) => loadImage(projectImageSource(portrait.src))));
         if (disposed) return;
         const gl = canvas.getContext("webgl", { antialias: false, premultipliedAlpha: false });
         if (!gl) return;

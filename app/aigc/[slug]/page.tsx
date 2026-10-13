@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
+import Image from "../../components/ProjectImage";
+import Link from "../../components/NavigationLink";
 import { notFound } from "next/navigation";
 import navigationStyles from "../../about/about.module.css";
 import styles from "../../urban/urban.module.css";

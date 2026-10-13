@@ -14,16 +14,11 @@ import {
   type RigidBodyProps,
 } from "@react-three/rapier";
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-import styles from "./PortfolioLanyard.module.css";
-import projectLinkStyles from "./UrbanProjectLinks.module.css";
-
-const CARD_MODEL = "/react-bits-lanyard-card.glb";
+const CARD_MODEL = "/zhong-lanyard-card-v2.glb";
 const CARD_TEXTURE = "/zhong-card-texture-v9.webp";
 const CARD_ROLE = "Spatial Designer & Creative Technologist";
 const LANYARD_TEXTURE = "/zhong-lanyard.png";
@@ -59,11 +54,12 @@ type LanyardRigidBody = RapierRigidBody & {
 function PortfolioBand({
   isMobile,
   keyboardFocused,
+  onOpen,
 }: {
   isMobile: boolean;
   keyboardFocused: boolean;
+  onOpen: () => void;
 }) {
-  const router = useRouter();
   const band = useRef<
     THREE.Mesh<InstanceType<typeof MeshLineGeometry>, InstanceType<typeof MeshLineMaterial>>
   >(null!);
@@ -269,7 +265,7 @@ function PortfolioBand({
                   Math.hypot(event.nativeEvent.clientX - origin.x, event.nativeEvent.clientY - origin.y) <
                     CLICK_MOVE_THRESHOLD
                 ) {
-                  router.push("/about");
+                  onOpen();
                 }
               }}
               onPointerDown={(event: ThreeEvent<PointerEvent>) => {
@@ -326,8 +322,19 @@ function PortfolioBand({
   );
 }
 
-export default function PortfolioLanyard() {
-  const [keyboardFocused, setKeyboardFocused] = useState(false);
+function ReadySignal({ onReady }: { onReady: () => void }) {
+  useEffect(() => {
+    const frame = requestAnimationFrame(onReady);
+    return () => cancelAnimationFrame(frame);
+  }, [onReady]);
+  return null;
+}
+
+export default function PortfolioLanyard({ onReady, onOpen, keyboardFocused }: {
+  onReady: () => void;
+  onOpen: () => void;
+  keyboardFocused: boolean;
+}) {
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== "undefined" && window.innerWidth < 768,
   );
@@ -339,11 +346,6 @@ export default function PortfolioLanyard() {
   }, []);
 
   return (
-    <div
-      className={styles.wrapper}
-      data-portfolio-lanyard
-      aria-label={`Zhong — ${CARD_ROLE}。可拖拽的 3D 挂绳工牌，点击进入自我介绍页面`}
-    >
       <Canvas
         camera={{ position: [0, 0, 24], fov: 20 }}
         dpr={[1, isMobile ? 1.5 : 2]}
@@ -352,7 +354,8 @@ export default function PortfolioLanyard() {
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={[0, -40, 0]} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-          <PortfolioBand isMobile={isMobile} keyboardFocused={keyboardFocused} />
+          <PortfolioBand isMobile={isMobile} keyboardFocused={keyboardFocused} onOpen={onOpen} />
+          <ReadySignal onReady={onReady} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
@@ -361,19 +364,6 @@ export default function PortfolioLanyard() {
           <Lightformer intensity={10} color="white" position={[-10, 0, 14]} rotation={[0, Math.PI / 2, Math.PI / 3]} scale={[100, 10, 1]} />
         </Environment>
       </Canvas>
-      <div className={styles.entryHint}>
-        <Link
-          className={`${projectLinkStyles.link} ${styles.profileLink}`}
-          href="/about"
-          aria-label="进入 About Me，了解 Zhong"
-          onFocus={(event) => setKeyboardFocused(event.currentTarget.matches(":focus-visible"))}
-          onBlur={() => setKeyboardFocused(false)}
-        >
-          <span className={projectLinkStyles.title} lang="en">EXPLORE ABOUT ME</span>
-          <span className={projectLinkStyles.arrow} aria-hidden="true">↗</span>
-        </Link>
-      </div>
-    </div>
   );
 }
 

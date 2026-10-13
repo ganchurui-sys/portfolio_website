@@ -13,6 +13,7 @@ export type UrbanProject = {
   images: UrbanProjectImage[];
   book?: {
     source: string;
+    preview: string;
     pageCount: number;
     startPage: number;
     pageMode: "split-spreads" | "single-pages";
@@ -53,6 +54,7 @@ export const urbanProjects: UrbanProject[] = [
     images: mlaPortfolioPages,
     book: {
       source: "/urban/mla/mla-pageflip.pdf",
+      preview: "/project-media-v1/urban/mla/page-01.webp",
       pageCount: 45,
       startPage: 2,
       pageMode: "split-spreads",
@@ -70,6 +72,7 @@ export const urbanProjects: UrbanProject[] = [
     images: [],
     book: {
       source: "/urban/ucl-final/ucl-final-design-web.pdf",
+      preview: "/project-media-v1/urban/ucl-final/preview.webp",
       pageCount: 131,
       startPage: 1,
       pageMode: "single-pages",

@@ -1,69 +1,64 @@
-# Homepage loading optimization
+# Portfolio loading and navigation
 
-## Media
+## Complete preparation before entry
 
-The previous entry path fetched two full files (197,744,532 bytes), assembled
-them as Blobs, then revealed the homepage. The new files keep the source's
-composition, color space and scene timestamps. The original files remain intact.
+The opening progress bar starts on arrival. It waits for the full selected
+H.264 video, decoded opening frames in both video elements, the badge, and
+project first-screen images. A download or decode failure keeps the loader and
+provides a retry; there is no six-second automatic bypass. The percentage is
+based on received video bytes (85%), completed image requests (10%), and final
+initialization (5%). Routes prefetch while preparation runs.
 
-| Variant | Resolution / fps | Keyframe interval | Bytes |
-| --- | --- | --- | ---: |
-| Desktop playback | 2560 × 1440 / 60 | 1 second | 15,510,902 |
-| Desktop scrolling | 1920 × 1080 / 30 | 0.2 seconds | 11,934,733 |
-| Mobile playback | 1280 × 720 / 30 | 1 second | 5,375,232 |
-| Mobile scrolling | 1280 × 720 / 30 | 0.1 seconds | 5,971,090 |
+| Homepage video | Resolution / fps | Bytes |
+| --- | --- | ---: |
+| Desktop | 1920 × 1080 / 30 | 6,345,315 |
+| Mobile / constrained network | 1280 × 720 / 30 | 3,194,551 |
 
-The desktop pair is 86.12% smaller; the mobile pair is 94.26% smaller. These are
-the complete pair sizes, not bytes required before entry. Only the selected pair
-is requested. All outputs use H.264/YUV420P/BT.709 and have MP4 metadata before the
-media payload (`faststart`). The 15.033-second outputs cover all original scene
-positions, including the 14.5-second ending. Compression and resizing are lossy.
+One object URL is shared by playback and scrubbing and retained for the browser
+session. Returning from a project reuses the downloaded video. H.264 uses a
+10-frame GOP, no B frames, YUV420P, BT.709, and faststart. The complete 15.033-second
+film retains the existing scene timestamps. Original videos remain unchanged.
 
-`scripts/prepare-home-media.mjs` contains the encoding settings. It only creates
-missing files and leaves both existing outputs and the original master alone.
+## Responsive interactions
 
-## Playback behavior
+Header chapter jumps take 600 ms. Scroll gestures retain their existing cinematic
+transition. Direct project returns position the requested scene without replaying
+the intro. Pending seeks coalesce instead of restarting each frame, and a video
+plays a transition only when its complete interval is buffered. Scroll positioning
+explicitly overrides CSS smooth scrolling. Badge visibility is no longer cleared
+by transient chapter positions during a seek.
 
-- Native video URLs replace full-file JavaScript downloads, allowing range
-  requests, browser caching and incremental buffering.
-- Entry waits for a decoded opening frame and one second buffered ahead at 1.5 s.
-  The second video starts loading when the cover begins leaving.
-- Media errors or six seconds without a playable opening reveal the poster and
-  navigation. Videos that arrive later use the current scene rather than reset
-  the page to the intro.
-- A scrolling video without a decoded frame stays hidden behind the playback
-  video/poster. Returning with `?scene=` navigates without waiting for metadata.
-- The 3D lanyard module loads on demand. Its model and textures are no longer
-  preloaded by the initial homepage bundle.
+Project links prefetch and show OPENING while a navigation is pending. The root
+loading boundary provides an immediate response on uncached routes.
+
+## Badge and images
+
+The badge GLB shrank from 2,457,784 to 162,612 bytes by removing an unused embedded
+PNG. Geometry, UV coordinates, nodes, and the metal material are byte-identical.
+A clickable preview remains available if WebGL cannot initialize.
+
+52 project WebP assets total 7.07 MB versus 155.83 MB in the source images. Images
+are resized within 1920 × 2560 and encoded at WebP quality 84 with alpha preserved.
+The image manifest maps display images while original full-resolution links are
+unchanged. The avatar shader also uses the prepared WebPs. PDF readers display
+first-page previews while loading; the PDFs and page-turn behavior are unchanged.
+Versioned assets have immutable cache headers. The short TVC hero video is also
+served as a lighter 1280-pixel H.264 copy; its original and full 4K film remain.
 
 ## Verification
 
-- Production build and TypeScript validation passed. ESLint passed for changed
-  source files and scripts.
-- Five startup regression tests cover small-screen/constrained-connection
-  selection, partial buffering, seek completion, noncontiguous buffer ranges,
-  errors/timeouts, and cancellation.
-- In fresh Chrome contexts against a local production build with disabled cache,
-  simulated 20 Mbps desktop entry took 2.47 s with 5.38 MB of video received;
-  simulated 5 Mbps mobile entry took 2.85 s with 1.62 MB received. Times run from
-  clicking the cover to the homepage becoming interactive, not from URL navigation.
-  Real deployment latency and devices will differ.
-- Desktop and mobile forward/reverse chapter navigation passed, and the 3D
-  badge still loads when About is opened. No uncaught browser errors occurred.
-- Browser checks also passed with both videos aborted, nine-second delayed media,
-  direct scene returns before metadata, and reduced-motion preferences. With a
-  nine-second response delay the normal entry became usable at 7.46 s, including
-  the cover transition; late media stayed on the manually selected scene.
-- Desktop and mobile screenshots were inspected. Matched frames from the source
-  and desktop playback were visually compared at 4.04 s.
-- Sampling every half second after matching frame rates and scaling the reference
-  to each output size gave mean SSIM values of 0.989835 (desktop playback),
-  0.976995 (desktop scrolling), 0.989071 (mobile playback), and 0.944936 (mobile
-  scrolling). These measure encoding differences at output resolution, not the
-  loss of detail from resizing the 4K source.
-- The existing AIGC tests pass. Three existing Urban tests still assume four
-  empty placeholder projects; the current, unchanged Urban data contains three
-  populated projects. Those unrelated expectations were not changed here.
+- Production build and TypeScript validation pass.
+- Six startup tests cover shared responsive media, complete-response gating,
+  session reuse, retry after network failure, decoded-frame gating, cancellation,
+  and noncontiguous buffered ranges. Four existing AIGC tests pass.
+- Browser checks verify initial progress, both videos ready before entry,
+  autoplay, chapter navigation, visible 3D badge, direct project returns, project
+  first-screen images, and PDF preview while the reader initializes.
+- Local fault/slow proxies verify that failed media retains retry and a slowly
+  delivered video completes before the entrance is enabled.
+- The pre-existing Urban tests still assume four empty placeholders. The data
+  contains three populated projects; those unrelated expectations are unchanged.
+- The pre-existing Urban video caption lint finding is unchanged.
 
 ## Fonts
 

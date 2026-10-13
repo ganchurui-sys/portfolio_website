@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
+import Image from "../../components/ProjectImage";
+import { projectImageSource } from "../../project-media";
+import Link from "../../components/NavigationLink";
 import { notFound } from "next/navigation";
 import navigationStyles from "../../about/about.module.css";
 import { getUrbanProject, urbanProjects, URBAN_RETURN_HREF } from "../projects";
@@ -77,7 +78,7 @@ export default async function UrbanProjectPage({ params }: ProjectPageProps) {
                 controls
                 playsInline
                 preload="metadata"
-                poster={project.video.poster}
+                poster={projectImageSource(project.video.poster)}
                 width={project.video.width}
                 height={project.video.height}
                 aria-label={`${project.title} 项目视频`}
