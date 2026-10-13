@@ -1,17 +1,15 @@
 "use client";
 
 import NextImage from "next/image";
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
-import PortfolioLanyard from "./components/PortfolioLanyard";
 import UrbanProjectLinks, { ProjectLinks } from "./components/UrbanProjectLinks";
 import { aigcProjects } from "./aigc/projects";
+import { prepareVideoStart, selectHomeVideoAssets, type VideoAssetUrls } from "./home-media";
+
+const PortfolioLanyard = dynamic(() => import("./components/PortfolioLanyard"), { ssr: false });
 
 type CoverState = "visible" | "loading" | "leaving" | "hidden";
-
-type VideoAssetUrls = {
-  master: string;
-  scrub: string;
-};
 
 const VIDEO_START_TIME = 1.5;
 const VIDEO_END_TIME = 14.5;
@@ -21,10 +19,19 @@ const NAVIGATION_TIME_OFFSET = 0.04;
 const SCENE_TRANSITION_DURATION = 900;
 const MAX_SCENE_TRANSITION_DURATION = 2300;
 const MAX_TRANSITION_PLAYBACK_RATE = 4.5;
-const MASTER_VIDEO_PATH = "/home-background-retro-desk-original-4k.mp4";
-const SCRUB_VIDEO_PATH = "/home-background-retro-desk-scrub-v4-1440p.mp4";
 const VIDEO_POSTER_PATH = "/home-background-retro-desk-original-4k-poster.jpg";
 const VIDEO_END_FRAME_PATH = "/home-background-retro-desk-original-4k-end.jpg";
+
+const getHomeVideoAssets = () => {
+  const connection = (navigator as Navigator & {
+    connection?: { saveData?: boolean; effectiveType?: string };
+  }).connection;
+  return selectHomeVideoAssets({
+    viewportWidth: window.innerWidth,
+    saveData: connection?.saveData,
+    effectiveType: connection?.effectiveType,
+  });
+};
 
 const getSceneIndexForTime = (time: number) => {
   for (let scene = SCENE_COUNT - 1; scene >= 0; scene -= 1) {
@@ -541,35 +548,28 @@ export default function Home() {
   const aboutBadgeShownRef = useRef(false);
   const [videoAssetUrls, setVideoAssetUrls] = useState<VideoAssetUrls | null>(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [loadingError, setLoadingError] = useState(false);
-  const [loadAttempt, setLoadAttempt] = useState(0);
   const bulletSectionRef = useRef<HTMLElement>(null);
   const bulletVideoRef = useRef<HTMLVideoElement>(null);
   const bulletScrubVideoRef = useRef<HTMLVideoElement>(null);
-  const videoAssetUrlsRef = useRef<VideoAssetUrls | null>(null);
   const requestedSceneRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const sceneParam = new URLSearchParams(window.location.search).get("scene");
-    if (sceneParam === null) return;
+    const frame = window.requestAnimationFrame(() => {
+      const sceneParam = new URLSearchParams(window.location.search).get("scene");
+      if (sceneParam === null) return;
 
-    const requestedScene = Number(sceneParam);
-    if (
-      !Number.isInteger(requestedScene) ||
-      requestedScene < 0 ||
-      requestedScene >= SCENE_COUNT
-    ) {
-      return;
-    }
+      const requestedScene = Number(sceneParam);
+      if (
+        !Number.isInteger(requestedScene) ||
+        requestedScene < 0 ||
+        requestedScene >= SCENE_COUNT
+      ) return;
 
-    requestedSceneRef.current = requestedScene;
-    const directAssetUrls = {
-      master: MASTER_VIDEO_PATH,
-      scrub: SCRUB_VIDEO_PATH,
-    };
-    videoAssetUrlsRef.current = directAssetUrls;
-    setVideoAssetUrls(directAssetUrls);
-    setCoverState("hidden");
+      requestedSceneRef.current = requestedScene;
+      setVideoAssetUrls(getHomeVideoAssets());
+      setCoverState("hidden");
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
@@ -586,134 +586,31 @@ export default function Home() {
   }, [coverState]);
 
   useEffect(() => {
-    if (coverState !== "loading" || videoAssetUrlsRef.current) return;
+    const video = bulletVideoRef.current;
+    if (coverState !== "loading" || !videoAssetUrls || !video) return;
 
-    const controller = new AbortController();
-    let lastProgress = -1;
-    const stats = {
-      master: { loaded: 0, total: 0 },
-      scrub: { loaded: 0, total: 0 },
-    };
-
-    const updateProgress = () => {
-      const total = stats.master.total + stats.scrub.total;
-      if (!total) return;
-
-      const loaded = stats.master.loaded + stats.scrub.loaded;
-      const nextProgress = Math.min(96, Math.round((loaded / total) * 96));
-      if (nextProgress !== lastProgress) {
-        lastProgress = nextProgress;
-        setLoadingProgress(nextProgress);
-      }
-    };
-
-    const fetchVideo = async (path: string) => {
-      const response = await fetch(path, {
-        cache: "force-cache",
-        signal: controller.signal,
-      });
-      if (!response.ok) throw new Error(`Unable to load ${path}`);
-      return response;
-    };
-
-    const streamVideo = async (
-      response: Response,
-      key: "master" | "scrub",
-    ) => {
-      const contentType = response.headers.get("content-type") || "video/mp4";
-      const reader = response.body?.getReader();
-
-      if (!reader) {
-        const buffer = await response.arrayBuffer();
-        stats[key].loaded = buffer.byteLength;
-        stats[key].total = buffer.byteLength;
-        updateProgress();
-        return new Blob([buffer], { type: contentType });
-      }
-
-      const chunks: ArrayBuffer[] = [];
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = value.buffer.slice(
-          value.byteOffset,
-          value.byteOffset + value.byteLength,
-        ) as ArrayBuffer;
-        chunks.push(chunk);
-        stats[key].loaded += value.byteLength;
-        updateProgress();
-      }
-
-      if (!stats[key].total) stats[key].total = stats[key].loaded;
-      updateProgress();
-      return new Blob(chunks, { type: contentType });
-    };
-
-    const preloadImage = (path: string) =>
-      new Promise<void>((resolve, reject) => {
-        const image = new Image();
-        image.addEventListener("load", () => resolve(), { once: true });
-        image.addEventListener("error", () => reject(new Error(`Unable to load ${path}`)), {
-          once: true,
-        });
-        image.src = path;
-      });
-
-    const loadAssets = async () => {
-      try {
-        setLoadingError(false);
-        setLoadingProgress(0);
-        const [masterResponse, scrubResponse] = await Promise.all([
-          fetchVideo(MASTER_VIDEO_PATH),
-          fetchVideo(SCRUB_VIDEO_PATH),
-        ]);
-        stats.master.total = Number(masterResponse.headers.get("content-length")) || 0;
-        stats.scrub.total = Number(scrubResponse.headers.get("content-length")) || 0;
-        updateProgress();
-        const [masterBlob, scrubBlob] = await Promise.all([
-          streamVideo(masterResponse, "master"),
-          streamVideo(scrubResponse, "scrub"),
-        ]);
-        setLoadingProgress(97);
-        await Promise.all([
-          preloadImage(VIDEO_POSTER_PATH),
-          preloadImage(VIDEO_END_FRAME_PATH),
-        ]);
-
-        if (controller.signal.aborted) return;
-        const urls = {
-          master: URL.createObjectURL(masterBlob),
-          scrub: URL.createObjectURL(scrubBlob),
-        };
-        videoAssetUrlsRef.current = urls;
-        setVideoAssetUrls(urls);
+    return prepareVideoStart(video, {
+      startTime: VIDEO_START_TIME,
+      onProgress: setLoadingProgress,
+      onReady: () => {
         setLoadingProgress(100);
-      } catch (error) {
-        if (controller.signal.aborted) return;
-        console.error(error);
-        setLoadingError(true);
-      }
-    };
-
-    void loadAssets();
-    return () => controller.abort();
-  }, [coverState, loadAttempt]);
-
-  useEffect(() => {
-    if (coverState !== "loading" || !videoAssetUrls) return;
-    const timer = window.setTimeout(() => setCoverState("leaving"), 420);
-    return () => window.clearTimeout(timer);
+        setCoverState("leaving");
+      },
+    });
   }, [coverState, videoAssetUrls]);
 
-  useEffect(() => () => {
-    const urls = videoAssetUrlsRef.current;
-    if (!urls) return;
-    if (urls.master.startsWith("blob:")) URL.revokeObjectURL(urls.master);
-    if (urls.scrub.startsWith("blob:")) URL.revokeObjectURL(urls.scrub);
-  }, []);
+  // Keep entry functional even when the browser suppresses transition events.
+  useEffect(() => {
+    if (coverState !== "leaving") return;
+    const timer = window.setTimeout(() => setCoverState("hidden"), 1200);
+    return () => window.clearTimeout(timer);
+  }, [coverState]);
 
   const enterPortfolio = () => {
-    if (coverState === "visible") setCoverState("loading");
+    if (coverState !== "visible") return;
+    setVideoAssetUrls(getHomeVideoAssets());
+    setLoadingProgress(0);
+    setCoverState("loading");
   };
 
   const scrollToScene = useCallback((scene: number) => {
@@ -740,7 +637,7 @@ export default function Home() {
     const documentRoot = document.documentElement;
     const previousScrollBehavior = documentRoot.style.scrollBehavior;
     const range = VIDEO_END_TIME - VIDEO_START_TIME;
-    let autoplayMode = !reducedMotion;
+    let autoplayMode = !reducedMotion && requestedSceneRef.current === null;
     let autoplayFrame = 0;
     let seekFrame = 0;
     let targetTime = VIDEO_START_TIME;
@@ -749,6 +646,7 @@ export default function Home() {
     let masterSwapPending = false;
     let manualControl = false;
     let manualShowingMaster = false;
+    let scrubHasFrame = scrubVideo.readyState >= 2;
     let stagePlaybackActive = false;
     let stageNavigationFrame = 0;
     let wheelReleaseTimer = 0;
@@ -818,8 +716,9 @@ export default function Home() {
 
       section.style.setProperty("--scene-progress", safeProgress.toFixed(4));
       section.style.setProperty("--stage-progress", stageProgress.toFixed(4));
-      const masterOpacity = manualControl && !manualShowingMaster ? 0 : videoOpacity;
-      const scrubOpacity = manualControl && !manualShowingMaster ? videoOpacity : 0;
+      const showScrub = manualControl && !manualShowingMaster && scrubHasFrame;
+      const masterOpacity = showScrub ? 0 : videoOpacity;
+      const scrubOpacity = showScrub ? videoOpacity : 0;
 
       section.style.setProperty("--video-opacity", masterOpacity.toFixed(4));
       section.style.setProperty("--scrub-video-opacity", scrubOpacity.toFixed(4));
@@ -856,7 +755,7 @@ export default function Home() {
     };
 
     const renderSeek = () => {
-      if (autoplayMode || reducedMotion || stagePlaybackActive) {
+      if (autoplayMode || reducedMotion || stagePlaybackActive || scrubVideo.readyState < 1) {
         seekFrame = 0;
         return;
       }
@@ -875,6 +774,10 @@ export default function Home() {
     };
 
     const handleScrubSeeked = () => {
+      if (scrubVideo.readyState >= 2) {
+        scrubHasFrame = true;
+        updateVisuals(getScrollProgress());
+      }
       if (
         !autoplayMode &&
         !reducedMotion &&
@@ -898,7 +801,7 @@ export default function Home() {
       if (settleTimer) window.clearTimeout(settleTimer);
       settleTimer = window.setTimeout(() => {
         settleTimer = 0;
-        if (!manualControl || autoplayMode) return;
+        if (!manualControl || autoplayMode || video.readyState < 2) return;
 
         if (Math.abs(video.currentTime - targetTime) < 0.025) {
           manualShowingMaster = true;
@@ -921,13 +824,9 @@ export default function Home() {
 
       updateVisuals(progress);
 
-      if (
-        !autoplayMode &&
-        !stagePlaybackActive &&
-        Number.isFinite(scrubVideo.duration) &&
-        scrubVideo.duration > 0
-      ) {
+      if (!autoplayMode && !stagePlaybackActive) {
         targetTime = VIDEO_START_TIME + progress * range;
+        if (scrubVideo.readyState < 1) return;
         if (reducedMotion) {
           scrubVideo.currentTime = targetTime;
         } else {
@@ -1022,7 +921,7 @@ export default function Home() {
       if (Math.abs(targetScrollTop - startScrollTop) < 1 || reducedMotion) {
         documentRoot.scrollTop = targetScrollTop;
         targetTime = sceneTime;
-        scrubVideo.currentTime = sceneTime;
+        if (scrubVideo.readyState >= 1) scrubVideo.currentTime = sceneTime;
         updateVisuals(targetProgress);
         scheduleMasterSwap(40);
         return;
@@ -1066,7 +965,7 @@ export default function Home() {
 
         documentRoot.scrollTop = startScrollTop + (targetScrollTop - startScrollTop) * elapsed;
         targetTime = frameTime;
-        if (!stagePlaybackActive && Math.abs(scrubVideo.currentTime - frameTime) >= 0.012) {
+        if (!stagePlaybackActive && scrubVideo.readyState >= 1 && Math.abs(scrubVideo.currentTime - frameTime) >= 0.012) {
           scrubVideo.currentTime = frameTime;
         }
         updateVisuals(frameProgress);
@@ -1080,7 +979,7 @@ export default function Home() {
         stagePlaybackActive = false;
         scrubVideo.pause();
         scrubVideo.playbackRate = 1;
-        scrubVideo.currentTime = sceneTime;
+        if (scrubVideo.readyState >= 1) scrubVideo.currentTime = sceneTime;
         targetTime = sceneTime;
         documentRoot.scrollTop = targetScrollTop;
         updateVisuals(targetProgress);
@@ -1215,11 +1114,18 @@ export default function Home() {
 
     const handleMetadata = () => {
       video.pause();
-      video.currentTime = VIDEO_START_TIME;
       video.playbackRate = 1;
+      // A late response must not restart the intro after manual navigation or
+      // when returning directly to a project section.
+      if (!autoplayMode || manualControl) {
+        video.currentTime = targetTime;
+        scheduleMasterSwap(40);
+        return;
+      }
+      video.currentTime = VIDEO_START_TIME;
       updateScene();
 
-      if (!reducedMotion) {
+      if (autoplayMode) {
         void video.play().then(() => {
           if (!autoplayFrame && autoplayMode) {
             autoplayFrame = window.requestAnimationFrame(syncAutoplay);
@@ -1233,12 +1139,13 @@ export default function Home() {
 
     const handleScrubMetadata = () => {
       scrubVideo.pause();
-      scrubVideo.currentTime = VIDEO_START_TIME;
+      scrubVideo.currentTime = targetTime;
     };
 
     video.addEventListener("loadedmetadata", handleMetadata);
     video.addEventListener("seeked", handleMasterSeeked);
     scrubVideo.addEventListener("loadedmetadata", handleScrubMetadata);
+    scrubVideo.addEventListener("loadeddata", handleScrubSeeked);
     scrubVideo.addEventListener("seeked", handleScrubSeeked);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", updateScene);
@@ -1257,6 +1164,7 @@ export default function Home() {
       video.removeEventListener("loadedmetadata", handleMetadata);
       video.removeEventListener("seeked", handleMasterSeeked);
       scrubVideo.removeEventListener("loadedmetadata", handleScrubMetadata);
+      scrubVideo.removeEventListener("loadeddata", handleScrubSeeked);
       scrubVideo.removeEventListener("seeked", handleScrubSeeked);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", updateScene);
@@ -1310,12 +1218,11 @@ export default function Home() {
       });
     };
 
-    if (scrubVideo.readyState >= 1) navigateToRequestedScene();
-    else scrubVideo.addEventListener("loadedmetadata", navigateToRequestedScene, { once: true });
+    // Navigation and project links remain usable before either video buffers.
+    navigateToRequestedScene();
 
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
-      scrubVideo.removeEventListener("loadedmetadata", navigateToRequestedScene);
     };
   }, [coverState, scrollToScene]);
 
@@ -1326,7 +1233,7 @@ export default function Home() {
           className={`entry-cover ${coverState !== "visible" ? "entry-cover--loading" : ""} ${coverState === "leaving" ? "entry-cover--leaving" : ""}`}
           aria-label="作品集封面"
           onTransitionEnd={(event) => {
-            if (event.target === event.currentTarget && coverState === "leaving") {
+            if (event.target === event.currentTarget && event.propertyName === "transform" && coverState === "leaving") {
               setCoverState("hidden");
             }
           }}
@@ -1345,25 +1252,12 @@ export default function Home() {
             <div className="portfolio-loader" role="status" aria-live="polite">
               <div className="portfolio-loader__meta">
                 <span>PREPARING PORTFOLIO</span>
-                <span>{loadingError ? "LOAD ERROR" : `${loadingProgress}%`}</span>
+                <span>{loadingProgress}%</span>
               </div>
               <div className="portfolio-loader__track" aria-hidden="true">
                 <i style={{ transform: `scaleX(${loadingProgress / 100})` }} />
               </div>
-              {loadingError ? (
-                <button
-                  className="portfolio-loader__retry"
-                  type="button"
-                  onClick={() => {
-                    setLoadingError(false);
-                    setLoadAttempt((attempt) => attempt + 1);
-                  }}
-                >
-                  RETRY
-                </button>
-              ) : (
-                <p>LOADING 4K FILM · SCROLL PROXY · FINAL FRAME</p>
-              )}
+              <p>YOUR PORTFOLIO IS OPENING</p>
             </div>
           )}
         </section>
@@ -1404,7 +1298,7 @@ export default function Home() {
             <video
               ref={bulletScrubVideoRef}
               className="bullet-scrub-video"
-              src={videoAssetUrls?.scrub}
+              src={coverState === "leaving" || coverState === "hidden" ? videoAssetUrls?.scrub : undefined}
               muted
               playsInline
               preload="auto"
