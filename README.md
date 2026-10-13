@@ -57,10 +57,13 @@ with `npm run dev`. Other Project 02 assets are tracked directly in Git.
 
 ## Portfolio PDF
 
-The UCL final-design reader uses `public/urban/ucl-final/ucl-final-design-web.pdf`.
-This web copy optimizes embedded JPEG compression without resizing images or
-rasterizing the PDF's text and vectors. Its 131 pages and page dimensions are
-preserved. The larger original PDF is kept locally and excluded from Git.
+The UCL final-design reader uses `public/urban/ucl-final/ucl-final-design-web.pdf`
+with a versioned query string so returning visitors receive the updated file.
+The web copy is 60,172,651 bytes (60.17 MB), 41.35% smaller than the previous
+102.60 MB web version. It recompresses 154 embedded JPEGs at quality 57 without
+resizing images or rasterizing the PDF's text and vectors. All 131 pages retain
+their page dimensions, content streams, and extracted text. Compression is lossy;
+the larger original PDF is kept locally and excluded from Git.
 
-`scripts/compress-ucl-pdf.py` documents the preparation process; it is not needed
-to build or deploy the website.
+`scripts/compress-ucl-pdf.py` documents the preparation process and accepts
+`--source` and `--output` paths; it is not needed to build or deploy the website.

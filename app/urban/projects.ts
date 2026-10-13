@@ -71,7 +71,7 @@ export const urbanProjects: UrbanProject[] = [
     summary: "AFTER FRAME — UCL RC11 final design portfolio, 2025/2026.",
     images: [],
     book: {
-      source: "/urban/ucl-final/ucl-final-design-web.pdf",
+      source: "/urban/ucl-final/ucl-final-design-web.pdf?v=20261013-60mb",
       preview: "/project-media-v1/urban/ucl-final/preview.webp",
       pageCount: 131,
       startPage: 1,

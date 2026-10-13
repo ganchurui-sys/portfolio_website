@@ -1,20 +1,29 @@
-"""Compress large embedded JPEGs without rasterizing pages or resizing images."""
+"""Prepare the approximately 60 MB web PDF without rasterizing or resizing pages."""
+import argparse
 from io import BytesIO
 from pathlib import Path
+import hashlib
 import json
 from PIL import Image, JpegImagePlugin
 from pypdf import PdfReader, PdfWriter
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "public/urban/ucl-final/ucl-final-design.pdf"
-OUTPUT = ROOT / "output/pdf/ucl-final-design-web.pdf"
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--source", type=Path, default=ROOT / "public/urban/ucl-final/ucl-final-design.pdf")
+parser.add_argument("--output", type=Path, default=ROOT / "output/pdf/ucl-final-design-web.pdf")
+args = parser.parse_args()
+SOURCE = args.source
+OUTPUT = args.output
 REPORT = ROOT / "tmp/pdfs/ucl-compression-report.json"
-TARGET_BYTES = 103_000_000  # Below GitHub's 100 MiB (104,857,600 byte) limit.
+TARGET_BYTES = 61_000_000  # Approximately 60 MB, preserving image pixel dimensions.
+
+if SOURCE.resolve() == OUTPUT.resolve():
+    raise ValueError("The preserved original must not be overwritten")
 
 OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 REPORT.parent.mkdir(parents=True, exist_ok=True)
 
-for quality in (82,):
+for quality in (57, 56, 55):
     reader = PdfReader(SOURCE)
     writer = PdfWriter(clone_from=reader)
     replaced = []
@@ -22,7 +31,7 @@ for quality in (82,):
         if not hasattr(obj, "get") or obj.get("/Subtype") != "/Image" or obj.get("/Filter") != "/DCTDecode":
             continue
         original = obj._data
-        if len(original) < 200_000 or obj.get("/Decode") is not None:
+        if len(original) < 100_000 or obj.get("/Decode") is not None:
             continue
         with Image.open(BytesIO(original)) as image:
             if image.mode not in ("RGB", "L"):
@@ -45,14 +54,17 @@ for quality in (82,):
               "output_bytes": OUTPUT.stat().st_size, "pages": len(reader.pages), "images": replaced}
     print(f"JPEG quality {quality}: {result['output_bytes'] / 1_000_000:.2f} MB; {len(replaced)} images optimized", flush=True)
     if result["output_bytes"] <= TARGET_BYTES:
-        REPORT.write_text(json.dumps(result, indent=2))
         break
 else:
-    raise RuntimeError("Could not reach the safe upload size with these quality settings")
+    raise RuntimeError("Could not reach approximately 60 MB with these quality settings")
 
 check = PdfReader(OUTPUT)
 assert len(check.pages) == len(reader.pages)
 for index, (before, after) in enumerate(zip(reader.pages, check.pages)):
     assert tuple(before.mediabox) == tuple(after.mediabox), index
+    assert tuple(before.cropbox) == tuple(after.cropbox), index
     assert before.get_contents().get_data() == after.get_contents().get_data(), index
+result["verified_page_content_streams"] = len(check.pages)
+result["sha256"] = hashlib.sha256(OUTPUT.read_bytes()).hexdigest()
+REPORT.write_text(json.dumps(result, indent=2) + "\n")
 print(f"Verified {len(check.pages)} unchanged page-content streams and page dimensions.", flush=True)
