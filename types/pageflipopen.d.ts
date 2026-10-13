@@ -20,6 +20,7 @@ declare module "pageflipopen" {
     toolbar?: boolean;
     toolbarAlwaysVisible?: boolean;
     onReady?: () => void;
+    onProgress?: (progress: { loaded: number; total?: number }) => void;
     onPageChange?: (page: number) => void;
     onError?: (error: Error) => void;
   };

@@ -31,6 +31,19 @@ by transient chapter positions during a seek.
 Project links prefetch and show OPENING while a navigation is pending. The root
 loading boundary provides an immediate response on uncached routes.
 
+All loading messages display a percentage beside the label. Homepage preparation
+retains its measured media/image progress. Both PDF readers use PDF.js byte
+progress, reserving 5% for module preparation and 5% for reader initialization;
+only the reader's ready callback completes the indicator. Range updates cannot
+move the number backward, and error messages do not display a completion value.
+The pinned PageFlipOpen 0.4.3 callback adapter runs after installation and before
+development/builds; PDF streaming, range requests and page turning are preserved.
+
+Next.js navigation exposes pending/complete without byte totals. The OPENING
+toast and OPENING PROJECT fallback therefore show an explicitly estimated
+percentage (≈, with an accessible estimated-progress label), capped at 95% while
+pending. The fallback bar follows the same percentage. Timers stop on unmount.
+
 ## Badge and images
 
 The badge GLB shrank from 2,457,784 to 162,612 bytes by removing an unused embedded

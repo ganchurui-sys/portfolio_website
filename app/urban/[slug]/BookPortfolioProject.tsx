@@ -2,6 +2,8 @@
 
 import Link from "../../components/NavigationLink";
 import Image from "../../components/ProjectImage";
+import LoadingPercentage from "../../components/LoadingPercentage";
+import { pdfLoadingProgress } from "../../loading-progress";
 import { useCallback, useEffect, useRef, useState } from "react";
 import navigationStyles from "../../about/about.module.css";
 import type { UrbanProject } from "../projects";
@@ -34,6 +36,7 @@ export default function BookPortfolioProject({ title, book }: BookPortfolioProje
   const [currentPage, setCurrentPage] = useState(book.startPage);
   const [totalPages, setTotalPages] = useState(book.pageCount);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [dragSpread, setDragSpread] = useState<number | null>(null);
 
   useEffect(() => {
@@ -42,10 +45,13 @@ export default function BookPortfolioProject({ title, book }: BookPortfolioProje
 
     const initialiseFlipbook = async () => {
       if (!flipbookElement.current) return;
+      setStatus("loading");
+      setLoadingProgress(0);
 
       try {
         const { default: PageFlipOpen } = await import("pageflipopen");
         if (cancelled || !flipbookElement.current) return;
+        setLoadingProgress(5);
 
         PageFlipOpen.setPdfWorkerSrc("/vendor/pageflipopen/pdf.worker.mjs");
         instance = new PageFlipOpen(flipbookElement.current, {
@@ -64,11 +70,15 @@ export default function BookPortfolioProject({ title, book }: BookPortfolioProje
           toolbar: false,
           backgroundColor: "transparent",
           pageBackground: "#fff",
+          onProgress: ({ loaded, total }) => {
+            if (!cancelled) setLoadingProgress(previous => pdfLoadingProgress(loaded, total, previous));
+          },
           onReady: () => {
             if (!instance || cancelled) return;
             flipbook.current = instance;
             setCurrentPage(instance.currentPage);
             setTotalPages(instance.totalPages);
+            setLoadingProgress(100);
             setStatus("ready");
           },
           onPageChange: (page: number) => {
@@ -215,7 +225,11 @@ export default function BookPortfolioProject({ title, book }: BookPortfolioProje
             {status !== "ready" && (
               <div className={styles.readerStatus} role="status">
                 <Image className={styles.preview} src={book.preview} alt={`${title} 首屏预览`} fill sizes="(max-width: 760px) 100vw, 75vw" priority />
-                <p>{status === "loading" ? "LOADING PORTFOLIO" : "PORTFOLIO COULD NOT BE LOADED"}</p>
+                <p>
+                  {status === "loading" ? (
+                    <>LOADING PORTFOLIO <LoadingPercentage value={loadingProgress} /></>
+                  ) : "PORTFOLIO COULD NOT BE LOADED"}
+                </p>
               </div>
             )}
           </div>

@@ -1,0 +1,9 @@
+.percentage {
+  display: inline-block;
+  min-width: 4ch;
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  white-space: nowrap;
+  text-align: right;
+}

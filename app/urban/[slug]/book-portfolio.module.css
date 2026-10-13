@@ -189,19 +189,13 @@
   text-align: center;
 }
 
-.readerStatus span {
-  display: block;
-  width: 42px;
-  height: 42px;
-  margin: auto;
-  border: 1px solid #aaa;
-  border-top-color: #111;
-  border-radius: 50%;
-  animation: loadingSpin 900ms linear infinite;
-}
-
 .readerStatus p {
   position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: calc(100% - 16px);
   z-index: 1;
   bottom: 14px;
   left: 50%;
@@ -212,6 +206,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
+  white-space: nowrap;
 }
 
 .readerStatus .preview {
