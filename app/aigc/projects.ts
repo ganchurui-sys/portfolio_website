@@ -95,7 +95,18 @@ export const aigcProjects: AigcProject[] = [
     title: "01 AI AVATAR DESIGN",
     titleZh: "AI 个人形象设计",
     summary: "An interactive AIGC character identity study.",
-    images: [],
+    imageLayout: "fit-screen",
+    images: [
+      "PDF 第 1 页：AI 个人 IP 设计封面，以个人角色与作品集挂绳卡呈现数字形象。",
+      "PDF 第 2 页：从真实自我，到数字形象，介绍项目背景、形象价值、情感诉求与传播目标。",
+      "PDF 第 3 页：个人参考与特征提取，从个人影像、局部五官特征到数字角色的转译过程。",
+      "PDF 第 4 页：角色设计探索，展示身体比例、五官方案比较与最终基础形象。",
+    ].map((alt, index) => ({
+      src: `/project-media-v1/aigc/project-01/pdf-v1/page-${String(index + 1).padStart(2, "0")}.webp`,
+      alt,
+      width: 3200,
+      height: 1813,
+    })),
   },
   {
     slug: "project-02",

@@ -1,4 +1,7 @@
 .gallery {
+  width: 100%;
+  max-width: var(--avatar-page-max-width, none);
+  margin-inline: auto;
   padding: clamp(48px, 6vw, 100px) 0 20px;
   background: #fff;
   color: #161616;
@@ -29,6 +32,8 @@
 }
 
 .viewport {
+  /* Keep Embla's track and slide offsets local to the centered gallery. */
+  position: relative;
   margin-top: 20px;
   overflow: hidden;
   touch-action: pan-y pinch-zoom;

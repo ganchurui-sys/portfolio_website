@@ -1,6 +1,6 @@
 .section {
   width: 100%;
-  max-width: 1480px;
+  max-width: var(--avatar-page-max-width, 1480px);
   margin-inline: auto;
   padding: clamp(80px, 8vw, 128px) 20px;
   background: #fff;
@@ -196,7 +196,7 @@
 
 @media (max-width: 900px) {
   .section {
-    max-width: min(1040px, 112svh);
+    max-width: var(--avatar-page-max-width, min(1040px, 112svh));
   }
 
   .layout {

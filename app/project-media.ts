@@ -5,6 +5,7 @@ export function projectImageSource(source: string) {
 }
 
 const firstProjectImages = [
+  "/project-media-v1/aigc/project-01/pdf-v1/page-01.webp",
   "/aigc/project-01/portraits-white-v1/portrait-01.png",
   "/aigc/project-01/portraits-white-v1/portrait-02.png",
   "/aigc/project-01/portraits-white-v1/portrait-03.png",
