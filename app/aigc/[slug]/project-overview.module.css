@@ -1,3 +1,10 @@
+.filmProject {
+  /* Match the 3200 × 1813 pages displayed at 82svh in the other AIGC projects. */
+  width: 100%;
+  max-width: calc(82svh * 3200 / 1813);
+  margin-inline: auto;
+}
+
 .subtitle {
   display: grid;
   gap: 8px;
@@ -113,6 +120,11 @@
 .fullFilmFigure video:focus-visible {
   outline: 2px solid #161616;
   outline-offset: 4px;
+}
+
+.pdfPageSection {
+  padding-block: clamp(12px, 2svh, 24px);
+  scroll-margin-top: 24px;
 }
 
 @media (max-width: 700px) {

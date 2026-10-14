@@ -46,7 +46,8 @@ export type AigcProject = {
     iteration: string;
   };
   workflow?: Pick<AigcContentSection, "image">;
-  brief?: AigcContentSection;
+  characterCorrections?: Pick<AigcContentSection, "image">;
+  brief?: AigcContentSection | { page: AigcContentSection["image"] };
   productVisuals?: AigcContentSection;
   characterConsistency?: {
     description: string;
@@ -159,14 +160,20 @@ export const aigcProjects: AigcProject[] = [
         height: 2142,
       },
     },
-    brief: {
-      description: "An AIGC creative commercial for AirPods Max, blending product visuals with a surreal urban narrative. Clean product design, character styling and a cohesive urban color palette emphasize technology, fashion and memorable imagery. Music, camera movement and an escalating sequence of surreal events shape the film’s emotional arc.",
-      translation: "AirPods Max AIGC 创意广告｜融合产品视觉与超现实都市叙事｜强化科技感、时尚感与视觉记忆点｜提取简洁产品语言、人物造型、城市色彩体系｜结合音乐节奏、镜头运动与递进式超现实事件构建完整广告情绪。",
+    characterCorrections: {
       image: {
-        src: "/aigc/project-02/airpods-max-brief.png",
-        alt: "紫色背景中，一位佩戴 AirPods Max 和蓝色眼镜、身穿绿色针织背心的人物侧面主视觉",
-        width: 1673,
-        height: 940,
+        src: "/project-media-v1/aigc/project-02/pdf-v1/page-26.webp",
+        alt: "角色细节修正：作品集第 26 页，展示包袋、发型、耳机穿模与缺失等生成问题、修正提示词，以及不同视角下的角色对照图。",
+        width: 3200,
+        height: 1800,
+      },
+    },
+    brief: {
+      page: {
+        src: "/project-media-v1/aigc/project-02/pdf-v1/page-20.webp",
+        alt: "从城市喧嚣，到自己的节奏：作品集第 20 页，介绍 AirPods Max 广告的产品价值、情感诉求与传播目标，并以城市喧嚣、感知转折、自己的世界三个画面展示叙事结构。",
+        width: 3200,
+        height: 1800,
       },
     },
     productVisuals: {

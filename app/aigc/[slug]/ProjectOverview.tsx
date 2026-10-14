@@ -20,7 +20,7 @@ export default function ProjectOverview({ project }: { project: AigcProject }) {
   ];
 
   return (
-    <article>
+    <article className={project.slug === "project-02" ? styles.filmProject : undefined}>
       <section
         id="project-introduction"
         className={introductionStyles.introduction}
@@ -97,7 +97,24 @@ export default function ProjectOverview({ project }: { project: AigcProject }) {
         ))}
       </section>
 
-      {contentSections.map(({ id, title, titleZh, content }) => content && (
+      {contentSections.map(({ id, title, titleZh, content }) => content && ("page" in content ? (
+        <section
+          key={id}
+          id={`project-${id}`}
+          className={styles.pdfPageSection}
+          aria-label={titleZh}
+        >
+          <Image
+            className={styles.sectionImage}
+            src={content.page.src}
+            alt={content.page.alt}
+            width={content.page.width}
+            height={content.page.height}
+            loading="lazy"
+            draggable={false}
+          />
+        </section>
+      ) : (
         <section
           key={id}
           id={`project-${id}`}
@@ -123,7 +140,7 @@ export default function ProjectOverview({ project }: { project: AigcProject }) {
             />
           </figure>
         </section>
-      ))}
+      )))}
 
       {project.characterConsistency && (
         <CharacterConsistency projectSlug={project.slug} content={project.characterConsistency} />
@@ -180,6 +197,23 @@ export default function ProjectOverview({ project }: { project: AigcProject }) {
       )}
       {project.workflow && (
         <Workflow projectSlug={project.slug} content={project.workflow} />
+      )}
+      {project.characterCorrections && (
+        <section
+          id="project-character-corrections"
+          className={styles.pdfPageSection}
+          aria-label="角色细节修正"
+        >
+          <Image
+            className={styles.sectionImage}
+            src={project.characterCorrections.image.src}
+            alt={project.characterCorrections.image.alt}
+            width={project.characterCorrections.image.width}
+            height={project.characterCorrections.image.height}
+            loading="lazy"
+            draggable={false}
+          />
+        </section>
       )}
     </article>
   );
