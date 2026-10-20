@@ -564,7 +564,7 @@ export default function Home() {
     const sceneParam = new URLSearchParams(window.location.search).get("scene");
     const scene = sceneParam === null ? NaN : Number(sceneParam);
     if (Number.isInteger(scene) && scene >= 0 && scene < SCENE_COUNT) requestedSceneRef.current = scene;
-    for (const href of ["/about", "/urban/project-01", "/urban/project-02", "/urban/project-03", "/aigc/project-01", "/aigc/project-02", "/aigc/project-03"]) {
+    for (const href of ["/about", "/urban/project-01", "/urban/project-02", "/urban/project-03", ...aigcProjects.map(({ slug }) => `/aigc/${slug}`)]) {
       router.prefetch(href);
     }
     let videoProgress = 0;
@@ -1025,8 +1025,17 @@ export default function Home() {
       }, 320);
     };
 
+    const isScrollableProjectList = (target: EventTarget | null) => {
+      const list = target instanceof Element
+        ? target.closest<HTMLElement>('nav[data-section="aigc"]')
+        : null;
+      return list !== null
+        && list.scrollHeight > list.clientHeight + 1
+        && ["auto", "scroll"].includes(window.getComputedStyle(list).overflowY);
+    };
+
     const handleStageWheel = (event: WheelEvent) => {
-      if (event.ctrlKey) return;
+      if (event.ctrlKey || isScrollableProjectList(event.target)) return;
       event.preventDefault();
 
       if (wheelGestureLocked || stageNavigationFrame) {
@@ -1068,6 +1077,7 @@ export default function Home() {
     };
 
     const handleManualKey = (event: KeyboardEvent) => {
+      if (isScrollableProjectList(event.target)) return;
       const forwardKeys = ["ArrowDown", "PageDown", " "];
       const backwardKeys = ["ArrowUp", "PageUp"];
       if (![...forwardKeys, ...backwardKeys, "Home", "End"].includes(event.key)) return;
@@ -1082,8 +1092,9 @@ export default function Home() {
 
     const handleStageTouchStart = (event: TouchEvent) => {
       if (
-        event.target instanceof Element &&
-        event.target.closest(".about-work-badge__card, [data-portfolio-lanyard]")
+        isScrollableProjectList(event.target) ||
+        (event.target instanceof Element &&
+        event.target.closest(".about-work-badge__card, [data-portfolio-lanyard]"))
       ) {
         touchStartY = null;
         return;

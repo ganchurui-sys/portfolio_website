@@ -153,6 +153,33 @@
   }
 }
 
+@media (max-width: 760px) and (min-height: 501px) {
+  .nav[data-section="aigc"] {
+    top: max(72px, 10svh);
+    height: auto;
+    /* Keep longer project lists above the chapter title on short phone screens. */
+    max-height: calc(80svh - 270px);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+
+  .nav[data-section="aigc"] .list {
+    row-gap: clamp(6px, 1.2svh, 12px);
+  }
+
+  .nav[data-section="aigc"] .link {
+    padding-block: 2px;
+  }
+
+  .nav[data-section="aigc"] .titles {
+    gap: 6px;
+  }
+
+  .nav[data-section="aigc"] .updateNote {
+    margin-top: 12px;
+  }
+}
+
 @media (max-width: 760px) and (max-height: 500px) {
   .nav[data-section="aigc"] {
     top: 14svh;

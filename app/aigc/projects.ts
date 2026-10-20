@@ -479,6 +479,46 @@ export const aigcProjects: AigcProject[] = [
       height: 1813,
     })),
   },
+  {
+    slug: "project-04",
+    title: "04 MBTI JOB SEARCH DESIGN",
+    titleZh: "MBTI 求职应用设计",
+    summary: "A speculative design project imagining a world where MBTI is the only criterion for recruitment. Following an ENTJ job seeker, the project connects research, a visual identity, a job search app and onboarding materials to question how reliance on personality labels can narrow individual choices.",
+    overview: {
+      title: "MBTI JOB SEARCH DESIGN",
+      subtitle: "MBTI · Speculative Design / UI/UX",
+      translation: "本项目构建了一个以 MBTI 作为招聘唯一评判标准的虚构世界，并围绕 ENTJ 人格类型的求职经历展开设计。从用户访谈与研究出发，将人格测试与寻求外部指引的心理联系起来，延展视觉识别、求职应用界面及入职物料，以荒诞的招聘规则反思对人格标签的过度依赖，以及被标签限制的个人选择。",
+      details: [
+        {
+          label: "ROLE",
+          value: "Design Research / Visual Identity / UI/UX Design",
+        },
+        {
+          label: "OUTPUT",
+          value: "Job Search App / Identity System / Onboarding Materials",
+        },
+        { label: "APPROACH", value: "Speculative Design" },
+      ],
+    },
+    imageLayout: "fit-screen",
+    images: [
+      "PDF 第 1 页：MBTI 求职应用设计封面与项目背景，从社交媒体中的人格标签现象提出对 MBTI 的思考。",
+      "PDF 第 2 页：MBTI 使用现状与用户访谈，整理使用动机、访谈结论，以及人格测试与寻求外部指引的关联。",
+      "PDF 第 3 页：地方性庙宇与算命研究，对照人格测试的理论发展、用户特征、实施流程与心理机制。",
+      "PDF 第 4 页：个人观点与设计构想，设想一个以 MBTI 为唯一标准的求职、就业与社交环境。",
+      "PDF 第 5 页：视觉设计规范，展示四组人格类型配色、标志推导与十六型人格图腾的设计来源。",
+      "PDF 第 6 页：十六型人格图腾总览，以及应用图标和导航栏选中、未选中状态的设计。",
+      "PDF 第 7 页：求职应用的信息架构与低保真界面，涵盖测试、职位、聊天、论坛和个人中心。",
+      "PDF 第 8 页：以 ENTJ 为例的应用使用场景，展示人格测试、职位推荐、个人资料与求职评分机制。",
+      "PDF 第 9 页：入职后的物料应用，通过人格类型对应的色彩与图腾延展工作证、海报及员工手册。",
+      "PDF 第 10 页：员工手册与人格图腾的实物展示，将测试结果转化为虚构职场中的行为指引。",
+    ].map((alt, index) => ({
+      src: `/project-media-v1/aigc/project-04/pdf-v1/page-${String(index + 1).padStart(2, "0")}.webp`,
+      alt,
+      width: 3200,
+      height: 1800,
+    })),
+  },
 ];
 
 export const AIGC_RETURN_HREF = "/?scene=3";
