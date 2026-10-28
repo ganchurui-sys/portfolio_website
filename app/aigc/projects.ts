@@ -481,7 +481,32 @@ export const aigcProjects: AigcProject[] = [
   },
   {
     slug: "project-04",
-    title: "04 MBTI JOB SEARCH DESIGN",
+    title: "04 STÜSSY CITY WAVES",
+    titleZh: "Stüssy 城市浪潮",
+    summary: "A street-culture visual design project for Stüssy CITY WAVES, combining skate photography, expressive purple lettering and hand-drawn graphics. The visual language extends from the key visual and typography to social media posters and outdoor advertising.",
+    overview: {
+      title: "STÜSSY CITY WAVES",
+      subtitle: "Stüssy · Street Culture / Visual Design",
+      translation: "以「Stüssy 城市浪潮」为主题，将滑板影像、富有动感的紫色字体与手绘图形结合，形成统一的街头视觉语言。从主视觉与字体设计，延展至社交媒体海报、街头围挡及户外广告应用。",
+    },
+    imageLayout: "fit-screen",
+    images: [
+      "PDF 第 1 页：Stüssy CITY WAVES 城市浪潮项目封面，以滑板人物与品牌标志拼贴呈现街头主题。",
+      "PDF 第 2 页：城市浪潮主视觉，将滑板人物影像、紫色手绘字体与纸张肌理结合。",
+      "PDF 第 3 页：字体设计，展示 CITY WAVES、SHANGHAI 与活动日期的紫色手绘字形。",
+      "PDF 第 4 页：广告与宣传物料，三张结合滑板摄影、蓝紫手绘图形与活动字体的社交媒体海报。",
+      "PDF 第 5 页：城市浪潮视觉在街头围挡上的连续画面应用。",
+      "PDF 第 6 页：城市浪潮视觉在建筑立面、户外广告牌与舞台屏幕中的应用。",
+    ].map((alt, index) => ({
+      src: `/project-media-v1/aigc/stussy-city-waves/pdf-v1/page-${String(index + 1).padStart(2, "0")}.webp`,
+      alt,
+      width: 3200,
+      height: 1800,
+    })),
+  },
+  {
+    slug: "project-05",
+    title: "05 MBTI JOB SEARCH DESIGN",
     titleZh: "MBTI 求职应用设计",
     summary: "A speculative design project imagining a world where MBTI is the only criterion for recruitment. Following an ENTJ job seeker, the project connects research, a visual identity, a job search app and onboarding materials to question how reliance on personality labels can narrow individual choices.",
     overview: {

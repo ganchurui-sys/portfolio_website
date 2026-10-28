@@ -1,0 +1,53 @@
+.section {
+  padding-block: clamp(12px, 2svh, 24px);
+  border-block: 1px solid #dededb;
+  scroll-margin-top: 16px;
+}
+
+.sheet {
+  position: relative;
+  width: 100%;
+  max-width: calc(82svh * 16 / 9);
+  aspect-ratio: 16 / 9;
+  margin-inline: auto;
+  background: #fff;
+}
+
+.tickets {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: block;
+  width: 50%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.wristbands {
+  position: absolute;
+  top: 13.2%;
+  left: 57%;
+  width: 34%;
+  height: 82%;
+  object-fit: contain;
+  background: #fff;
+}
+
+.playback {
+  position: absolute;
+  right: 4%;
+  bottom: 2%;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #dededb;
+  border-radius: 50%;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+}
+
+.playback svg { fill: currentColor; }
+.playback:hover { color: #161616; border-color: #999; }
+.playback:focus-visible { outline: 2px solid #8341c9; outline-offset: 3px; }

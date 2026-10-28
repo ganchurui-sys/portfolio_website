@@ -13,6 +13,7 @@ const firstProjectImages = [
   "/aigc/project-01/portraits-white-v1/portrait-05.png",
   "/aigc/project-02/airpods-max-hero-clean.jpg",
   "/aigc/project-03/pdf-v2/page-01.webp",
+  "/project-media-v1/aigc/stussy-city-waves/pdf-v1/page-01.webp",
   "/project-media-v1/aigc/project-04/pdf-v1/page-01.webp",
   "/urban/mla/page-01.jpg",
   "/project-media-v1/urban/ucl-final/preview.webp",

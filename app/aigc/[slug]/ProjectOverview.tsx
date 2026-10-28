@@ -7,6 +7,9 @@ import StoryboardOverview from "./StoryboardOverview";
 import Storyboard from "./Storyboard";
 import ProductionProcess from "./ProductionProcess";
 import Workflow from "./Workflow";
+import StussyApparel from "./StussyApparel";
+import StussyEventMaterials from "./StussyEventMaterials";
+import StussySceneFilm from "./StussySceneFilm";
 import introductionStyles from "./project-introduction.module.css";
 import styles from "./project-overview.module.css";
 
@@ -96,6 +99,14 @@ export default function ProjectOverview({ project }: { project: AigcProject }) {
           </figure>
         ))}
       </section>
+
+      {project.slug === "project-04" && (
+        <>
+          <StussyApparel />
+          <StussyEventMaterials />
+          <StussySceneFilm />
+        </>
+      )}
 
       {contentSections.map(({ id, title, titleZh, content }) => content && ("page" in content ? (
         <section

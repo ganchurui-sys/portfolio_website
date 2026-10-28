@@ -1,0 +1,46 @@
+.section {
+  padding-block: clamp(12px, 2svh, 24px);
+  border-block: 1px solid #dededb;
+  scroll-margin-top: 16px;
+}
+
+.sheet {
+  position: relative;
+  width: 100%;
+  max-width: calc(82svh * 16 / 9);
+  aspect-ratio: 16 / 9;
+  margin-inline: auto;
+  background: #fff;
+}
+
+.frame {
+  position: absolute;
+  inset: 5.185% 2.917%;
+}
+
+.video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.playback {
+  position: absolute;
+  right: 6.8%;
+  bottom: 7%;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #ffffff70;
+  border-radius: 50%;
+  background: #0008;
+  color: #fff;
+  cursor: pointer;
+}
+
+.playback svg { fill: currentColor; }
+.playback:hover { background: #000c; border-color: #fff; }
+.playback:focus-visible { outline: 2px solid #8341c9; outline-offset: 3px; }

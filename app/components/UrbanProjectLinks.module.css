@@ -13,6 +13,8 @@
 }
 
 .nav[data-section="aigc"] {
+  display: flex;
+  flex-direction: column;
   opacity: var(--aigc-opacity);
 }
 
@@ -30,7 +32,16 @@
 }
 
 .nav[data-section="aigc"] .list {
-  row-gap: clamp(24px, 4vh, 48px);
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  row-gap: clamp(4px, 0.8svh, 8px);
+}
+
+.nav[data-section="aigc"] .item {
+  flex: none;
 }
 
 .updateNote {
@@ -91,7 +102,18 @@
 }
 
 .nav[data-section="aigc"] .link {
+  min-height: 0;
+  padding-block: 0;
   align-items: flex-start;
+}
+
+.nav[data-section="aigc"] .titles {
+  gap: clamp(4px, 0.8svh, 8px);
+}
+
+.nav[data-section="aigc"] .updateNote {
+  flex: none;
+  margin-top: clamp(10px, 1.5svh, 18px);
 }
 
 .nav[data-section="aigc"] .arrow {
@@ -156,27 +178,37 @@
 @media (max-width: 760px) and (min-height: 501px) {
   .nav[data-section="aigc"] {
     top: max(72px, 10svh);
-    height: auto;
-    /* Keep longer project lists above the chapter title on short phone screens. */
-    max-height: calc(80svh - 270px);
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
+    /* Reserve space for the chapter heading below the complete project list. */
+    height: calc(80svh - 270px);
+  }
+}
+
+@media (max-width: 760px) and (min-height: 501px) and (max-height: 740px) {
+  .nav[data-section="aigc"] {
+    height: calc(80svh - 240px);
   }
 
   .nav[data-section="aigc"] .list {
-    row-gap: clamp(6px, 1.2svh, 12px);
+    row-gap: 3px;
   }
 
   .nav[data-section="aigc"] .link {
-    padding-block: 2px;
+    font-size: clamp(16px, 2.8svh, 20px);
   }
 
   .nav[data-section="aigc"] .titles {
-    gap: 6px;
+    gap: 3px;
+  }
+
+  .nav[data-section="aigc"] .translation {
+    font-size: clamp(12px, 2.1svh, 14px);
+    line-height: 1.35;
   }
 
   .nav[data-section="aigc"] .updateNote {
-    margin-top: 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.4;
   }
 }
 
